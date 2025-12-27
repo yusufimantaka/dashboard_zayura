@@ -62,6 +62,7 @@ CREATE TABLE transactions (
   description TEXT,
   payment_method TEXT, -- Cash, Transfer
   proof_image TEXT, -- Base64 or URL
+  invoice_id UUID REFERENCES invoices(id) ON DELETE SET NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 

@@ -96,7 +96,39 @@ export default function LaundryPage() {
             </Button>
           </DialogTrigger>
           <DialogContent>
-            {/* ... DialogHeader ... */}
+            <DialogHeader><DialogTitle>Input Pesanan Laundry</DialogTitle></DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label>Penghuni</Label>
+                <Select onValueChange={(val) => setFormData({...formData, resident_id: val})}>
+                  <SelectTrigger><SelectValue placeholder="Pilih penghuni" /></SelectTrigger>
+                  <SelectContent>
+                    {residents.map(r => <SelectItem key={r.id} value={r.id}>{r.full_name}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="grid gap-2">
+                  <Label>Berat (kg)</Label>
+                  <Input type="number" step="0.1" value={formData.weight_kg || ""} onChange={(e) => {
+                    const weight = parseFloat(e.target.value);
+                    setFormData({...formData, weight_kg: weight, price: weight * 10000});
+                  }} />
+                </div>
+                <div className="grid gap-2">
+                  <Label>Total Harga (Rp)</Label>
+                  <Input type="number" value={formData.price || ""} onChange={(e) => setFormData({...formData, price: parseInt(e.target.value)})} />
+                </div>
+              </div>
+              <div className="grid gap-2">
+                <Label>Tanggal</Label>
+                <Input type="date" value={formData.date} onChange={(e) => setFormData({...formData, date: e.target.value})} />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Batal</Button>
+              <Button onClick={handleAddLaundry}>Simpan</Button>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>

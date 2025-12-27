@@ -187,35 +187,40 @@ export default function KeuanganPage() {
         </DialogContent>
       </Dialog>
 
-      <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-3">
-        <Card className="shadow-sm border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
-            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Pemasukan</CardTitle>
-            <TrendingUp size={14} className="text-emerald-500" />
-          </CardHeader>
-          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
-            <div className="text-base sm:text-2xl font-bold tracking-tight text-emerald-600">Rp {totalIncome.toLocaleString()}</div>
-            <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5">{months[selectedMonth]}</p>
+      <div className="grid gap-3 grid-cols-2 lg:grid-cols-3">
+        <Card className="shadow-sm border-border bg-card">
+          <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Pemasukan</p>
+              <TrendingUp size={14} className="text-emerald-500" />
+            </div>
+            <div>
+              <div className="text-lg sm:text-2xl font-bold tracking-tight text-emerald-600">Rp {totalIncome.toLocaleString()}</div>
+              <p className="text-[9px] text-muted-foreground font-medium">{months[selectedMonth]}</p>
+            </div>
           </CardContent>
         </Card>
-        <Card className="shadow-sm border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
-            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Pengeluaran</CardTitle>
-            <TrendingDown size={14} className="text-rose-500" />
-          </CardHeader>
-          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
-            <div className="text-base sm:text-2xl font-bold tracking-tight text-rose-600">Rp {totalExpense.toLocaleString()}</div>
-            <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5">{months[selectedMonth]}</p>
+
+        <Card className="shadow-sm border-border bg-card">
+          <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Pengeluaran</p>
+              <TrendingDown size={14} className="text-rose-500" />
+            </div>
+            <div>
+              <div className="text-lg sm:text-2xl font-bold tracking-tight text-rose-600">Rp {totalExpense.toLocaleString()}</div>
+              <p className="text-[9px] text-muted-foreground font-medium">{months[selectedMonth]}</p>
+            </div>
           </CardContent>
         </Card>
+
         <Card className="shadow-sm border-border bg-foreground text-background col-span-2 lg:col-span-1">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
-            <CardTitle className="text-[10px] sm:text-xs font-semibold opacity-70">Saldo Bersih</CardTitle>
-            <Wallet size={14} className="opacity-70" />
-          </CardHeader>
-          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
-            <div className="text-lg sm:text-2xl font-bold tracking-tight">Rp {(totalIncome - totalExpense).toLocaleString()}</div>
-            <p className="text-[9px] sm:text-[10px] opacity-50 font-medium mt-0.5">Net Flow</p>
+          <CardContent className="p-4 flex flex-row items-center justify-between min-h-[60px]">
+            <div>
+              <p className="text-[10px] sm:text-xs font-semibold opacity-70">Saldo Bersih</p>
+              <div className="text-xl sm:text-2xl font-bold tracking-tight">Rp {(totalIncome - totalExpense).toLocaleString()}</div>
+            </div>
+            <Wallet size={20} className="opacity-70" />
           </CardContent>
         </Card>
       </div>
@@ -227,42 +232,46 @@ export default function KeuanganPage() {
           <TabsTrigger value="expense" className="flex-1 rounded-md text-[10px] sm:text-xs font-semibold px-4">Keluar</TabsTrigger>
         </TabsList>
         <TabsContent value={activeTab} className="mt-0">
-          <Card className="shadow-sm border-border overflow-hidden rounded-xl">
+          <Card className="shadow-sm border-border overflow-hidden rounded-2xl">
             <CardContent className="p-0">
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto scrollbar-hide">
                 <Table>
-                  <TableHeader className="bg-muted/50">
+                  <TableHeader className="bg-muted/50 border-b">
                     <TableRow className="hover:bg-transparent">
-                      <TableHead className="py-4 px-6 font-semibold text-foreground whitespace-nowrap text-[10px]">Tanggal</TableHead>
-                      <TableHead className="py-4 font-semibold text-foreground whitespace-nowrap text-[10px]">Kategori</TableHead>
-                      <TableHead className="py-4 font-semibold text-foreground whitespace-nowrap text-[10px]">Deskripsi</TableHead>
-                      <TableHead className="py-4 font-semibold text-foreground whitespace-nowrap text-[10px]">Jumlah</TableHead>
-                      <TableHead className="py-4 text-right px-6 font-semibold text-foreground whitespace-nowrap text-[10px]">Status</TableHead>
+                      <TableHead className="py-4 px-4 font-semibold text-foreground whitespace-nowrap text-[10px]">Info Transaksi</TableHead>
+                      <TableHead className="py-4 px-4 font-semibold text-foreground whitespace-nowrap text-right text-[10px]">Jumlah</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {displayTransactions.map((t) => (
                       <TableRow key={t.id} className="group hover:bg-muted/50 transition-colors border-border">
-                        <TableCell className="py-5 px-6 font-medium text-muted-foreground text-[10px] sm:text-xs whitespace-nowrap">{t.date}</TableCell>
-                        <TableCell className="py-5 whitespace-nowrap">
-                          <Badge variant="outline" className="text-[9px] font-semibold px-2 py-0.5 bg-muted/30 border-border">{t.category}</Badge>
+                        <TableCell className="py-4 px-4">
+                          <div className="flex flex-col gap-1">
+                            <div className="flex items-center gap-2">
+                              <Badge variant="outline" className="text-[9px] font-semibold px-1.5 py-0 bg-muted/30 border-border whitespace-nowrap">{t.category}</Badge>
+                              <span className="text-[10px] text-muted-foreground font-medium">{t.date}</span>
+                            </div>
+                            <span className="text-xs font-bold text-foreground truncate max-w-[180px] sm:max-w-none italic">"{t.description || "-"}"</span>
+                          </div>
                         </TableCell>
-                        <TableCell className="py-5 text-foreground font-semibold italic text-[10px] sm:text-xs truncate max-w-[150px] whitespace-nowrap">"{t.description || "-"}"</TableCell>
-                        <TableCell className="py-5 whitespace-nowrap">
-                          <span className={cn(
-                            "font-bold text-xs sm:text-sm",
-                            t.type === 'income' ? 'text-emerald-600' : 'text-rose-600'
-                          )}>
-                            {t.type === 'income' ? '+' : '-'} Rp {t.amount.toLocaleString()}
-                          </span>
-                        </TableCell>
-                        <TableCell className="py-5 text-right px-6 whitespace-nowrap">
-                          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 ml-auto" />
+                        <TableCell className="py-4 px-4 text-right whitespace-nowrap">
+                          <div className="flex flex-col items-end gap-1">
+                            <span className={cn(
+                              "font-bold text-sm sm:text-base tracking-tight",
+                              t.type === 'income' ? 'text-emerald-600' : 'text-rose-600'
+                            )}>
+                              {t.type === 'income' ? '+' : '-'} Rp {t.amount.toLocaleString()}
+                            </span>
+                            <div className={cn(
+                              "w-1.5 h-1.5 rounded-full",
+                              t.type === 'income' ? 'bg-emerald-500' : 'bg-rose-500'
+                            )} />
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
                     {displayTransactions.length === 0 && (
-                      <TableRow><TableCell colSpan={5} className="text-center py-12 text-muted-foreground italic text-sm">Belum ada data transaksi.</TableCell></TableRow>
+                      <TableRow><TableCell colSpan={2} className="text-center py-12 text-muted-foreground italic text-sm">Belum ada data transaksi.</TableCell></TableRow>
                     )}
                   </TableBody>
                 </Table>

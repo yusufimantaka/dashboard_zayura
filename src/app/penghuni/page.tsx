@@ -329,25 +329,30 @@ export default function PenghuniPage() {
         </Dialog>
       </div>
 
-      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2">
-        <Card className="shadow-sm border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
-            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Aktif</CardTitle>
-            <Users size={14} className="text-emerald-500" />
-          </CardHeader>
-          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
-            <div className="text-lg sm:text-2xl font-bold tracking-tight">{activeResidents.length}</div>
-            <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5 tracking-tighter">Residents</p>
+      <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
+        <Card className="shadow-sm border-border bg-card">
+          <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Aktif</p>
+              <Users size={14} className="text-emerald-500" />
+            </div>
+            <div>
+              <div className="text-xl sm:text-2xl font-bold tracking-tight">{activeResidents.length}</div>
+              <p className="text-[9px] text-muted-foreground font-medium">Residents</p>
+            </div>
           </CardContent>
         </Card>
-        <Card className="shadow-sm border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
-            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Riwayat</CardTitle>
-            <History size={14} className="text-muted-foreground" />
-          </CardHeader>
-          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
-            <div className="text-lg sm:text-2xl font-bold tracking-tight">{historyResidents.length}</div>
-            <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5 tracking-tighter">Ex-Residents</p>
+
+        <Card className="shadow-sm border-border bg-card">
+          <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Riwayat</p>
+              <History size={14} className="text-muted-foreground" />
+            </div>
+            <div>
+              <div className="text-xl sm:text-2xl font-bold tracking-tight">{historyResidents.length}</div>
+              <p className="text-[9px] text-muted-foreground font-medium">Ex-Residents</p>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -365,57 +370,53 @@ export default function PenghuniPage() {
         </div>
 
         <TabsContent value={activeTab} className="mt-0">
-          <Card className="border-border shadow-sm bg-card overflow-hidden rounded-xl">
+          <Card className="border-border shadow-sm bg-card overflow-hidden rounded-2xl">
             <CardContent className="p-0">
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto scrollbar-hide">
                 <Table>
-                  <TableHeader className="bg-muted/50">
+                  <TableHeader className="bg-muted/50 border-b">
                     <TableRow className="hover:bg-transparent">
-                      <TableHead className="py-4 px-6 font-semibold text-foreground whitespace-nowrap text-[10px]">Penghuni</TableHead>
-                      <TableHead className="py-4 font-semibold text-foreground whitespace-nowrap text-center text-[10px]">Unit</TableHead>
-                      <TableHead className="py-4 font-semibold text-foreground whitespace-nowrap text-center text-[10px]">Tagihan</TableHead>
-                      <TableHead className="py-4 font-semibold text-foreground whitespace-nowrap text-[10px]">Keluar</TableHead>
-                      <TableHead className="py-4 text-right px-6 font-semibold text-foreground whitespace-nowrap text-[10px]">Aksi</TableHead>
+                      <TableHead className="py-4 px-4 font-semibold text-foreground whitespace-nowrap text-[10px]">Info Penghuni</TableHead>
+                      <TableHead className="py-4 px-4 font-semibold text-foreground whitespace-nowrap text-center text-[10px]">Tagihan</TableHead>
+                      <TableHead className="py-4 px-4 font-semibold text-foreground whitespace-nowrap text-right text-[10px]">Aksi</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {displayList.map((item) => (
                       <TableRow key={item.id} className="group hover:bg-muted/50 transition-colors border-border">
-                        <TableCell className="py-5 px-6 whitespace-nowrap">
+                        <TableCell className="py-4 px-4 whitespace-nowrap">
                           <div className="flex flex-col">
                             <span className="font-bold text-foreground text-sm sm:text-base">{item.resident_name}</span>
-                            <span className="text-[10px] text-muted-foreground font-medium tracking-tight mt-0.5">{item.phone}</span>
+                            <div className="flex items-center gap-2 mt-0.5">
+                              <span className="text-xs font-bold text-muted-foreground">Kamar {item.room_number}</span>
+                              <span className="text-[10px] font-semibold text-muted-foreground bg-secondary px-1.5 py-0 rounded uppercase tracking-tighter">L{item.floor}</span>
+                            </div>
+                            <span className="text-[10px] text-muted-foreground font-medium mt-1">Keluar: {item.expected_end_date}</span>
                           </div>
                         </TableCell>
-                        <TableCell className="py-5 text-center whitespace-nowrap">
-                          <div className="flex flex-col items-center">
-                            <span className="font-bold text-foreground text-sm">{item.room_number}</span>
-                            <span className="text-[9px] font-bold text-muted-foreground tracking-tighter">{item.room_type}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell className="py-5 text-center whitespace-nowrap">
-                          {item.hasUnpaid ? (
-                            <div className="w-2 h-2 rounded-full bg-rose-500 mx-auto animate-pulse shadow-[0_0_8px_rgba(244,63,94,0.6)]" />
-                          ) : (
-                            <div className="w-2 h-2 rounded-full bg-emerald-500 mx-auto" />
-                          )}
-                        </TableCell>
-                        <TableCell className="py-5 whitespace-nowrap">
-                          <span className="text-[10px] sm:text-xs font-bold text-rose-500/80 bg-rose-500/5 px-2 py-1 rounded-md border border-rose-500/10 tracking-tighter">{item.expected_end_date}</span>
-                        </TableCell>
-                        <TableCell className="py-5 text-right px-6 whitespace-nowrap">
-                          <div className="flex justify-end gap-2">
-                            <Button variant="outline" size="sm" onClick={() => openDetail(item)} className="h-8 text-[9px] font-semibold px-3 bg-secondary/50">Tagihan</Button>
-                            {activeTab === 'active' ? (
-                              <Button variant="ghost" size="sm" onClick={() => handleCheckout(item.id)} className="text-muted-foreground hover:text-rose-500 transition-colors h-8 w-8 p-0 rounded-full"><LogOut size={14} /></Button>
+                        <TableCell className="py-4 px-4 text-center">
+                          <div className="flex flex-col items-center gap-1">
+                            {item.hasUnpaid ? (
+                              <div className="w-2 h-2 rounded-full bg-rose-500 animate-pulse shadow-[0_0_8px_rgba(244,63,94,0.6)]" />
                             ) : (
-                              <Button variant="ghost" size="sm" onClick={() => handleDelete(item.id)} className="text-muted-foreground hover:text-rose-500 transition-colors h-8 w-8 p-0 rounded-full"><Trash2 size={14} /></Button>
+                              <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                            )}
+                            <span className="text-[9px] font-bold text-muted-foreground uppercase">{item.hasUnpaid ? 'Tagihan' : 'Lunas'}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="py-4 px-4 text-right whitespace-nowrap">
+                          <div className="flex flex-col items-end gap-2">
+                            <Button variant="outline" size="sm" onClick={() => openDetail(item)} className="h-8 text-[10px] font-semibold px-3 bg-secondary/50 rounded-lg">Detail</Button>
+                            {activeTab === 'active' ? (
+                              <Button variant="ghost" size="sm" onClick={() => handleCheckout(item.id)} className="text-muted-foreground hover:text-rose-500 transition-colors h-7 w-7 p-0 rounded-full"><LogOut size={14} /></Button>
+                            ) : (
+                              <Button variant="ghost" size="sm" onClick={() => handleDelete(item.id)} className="text-muted-foreground hover:text-rose-500 transition-colors h-7 w-7 p-0 rounded-full"><Trash2 size={14} /></Button>
                             )}
                           </div>
                         </TableCell>
                       </TableRow>
                     ))}
-                    {displayList.length === 0 && <TableRow><TableCell colSpan={5} className="text-center py-12 text-muted-foreground italic text-sm">Tidak ada data ditemukan.</TableCell></TableRow>}
+                    {displayList.length === 0 && <TableRow><TableCell colSpan={3} className="text-center py-12 text-muted-foreground italic text-sm">Tidak ada data ditemukan.</TableCell></TableRow>}
                   </TableBody>
                 </Table>
               </div>

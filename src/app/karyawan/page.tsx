@@ -104,7 +104,48 @@ export default function KaryawanPage() {
             </Button>
           </DialogTrigger>
           <DialogContent>
-            {/* ... DialogHeader ... */}
+            <DialogHeader>
+              <DialogTitle>Tambah Karyawan Baru</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label>Nama Lengkap</Label>
+                <Input 
+                  placeholder="Contoh: Siti Aminah"
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label>Posisi / Jabatan</Label>
+                <Input 
+                  placeholder="Contoh: Kebersihan, Keamanan"
+                  value={formData.position}
+                  onChange={(e) => setFormData({...formData, position: e.target.value})}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label>Gaji per Bulan (Rp)</Label>
+                <Input 
+                  type="number" 
+                  placeholder="2000000"
+                  value={formData.salary || ""}
+                  onChange={(e) => setFormData({...formData, salary: parseInt(e.target.value)})}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label>Tanggal Bergabung</Label>
+                <Input 
+                  type="date"
+                  value={formData.join_date}
+                  onChange={(e) => setFormData({...formData, join_date: e.target.value})}
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Batal</Button>
+              <Button onClick={handleAddEmployee}>Simpan Karyawan</Button>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>

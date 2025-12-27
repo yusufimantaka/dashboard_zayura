@@ -130,90 +130,148 @@ export default function OperasionalPage() {
                 Input Pengeluaran
               </Button>
             </DialogTrigger>
-            {/* ... DialogContent ... */}
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Tambah Biaya Operasional</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label>Kategori</Label>
+                <Select onValueChange={(val) => setFormData({...formData, category: val})}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Pilih kategori" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Listrik">Listrik</SelectItem>
+                    <SelectItem value="Air">Air</SelectItem>
+                    <SelectItem value="Maintenance">Maintenance</SelectItem>
+                    <SelectItem value="Kebersihan">Kebersihan</SelectItem>
+                    <SelectItem value="Gaji Karyawan">Gaji Karyawan</SelectItem>
+                    <SelectItem value="Lainnya">Lainnya</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label>Jumlah (Rp)</Label>
+                <Input 
+                  type="number" 
+                  placeholder="500000"
+                  value={formData.amount || ""}
+                  onChange={(e) => setFormData({...formData, amount: parseInt(e.target.value)})}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label>Deskripsi</Label>
+                <Input 
+                  placeholder="Contoh: Token listrik utama"
+                  value={formData.description}
+                  onChange={(e) => setFormData({...formData, description: e.target.value})}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label>Tanggal</Label>
+                <Input 
+                  type="date"
+                  value={formData.date}
+                  onChange={(e) => setFormData({...formData, date: e.target.value})}
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Batal</Button>
+              <Button onClick={handleAddOps}>Simpan Pengeluaran</Button>
+            </DialogFooter>
+          </DialogContent>
           </Dialog>
         </div>
       </div>
 
-      <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-5">
-        <Card className="shadow-sm border-border px-1">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-3 pt-4 sm:px-6">
-            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Listrik</CardTitle>
-            <Zap size={14} className="text-amber-500" />
-          </CardHeader>
-          <CardContent className="px-3 pb-4 sm:px-6 sm:pb-6">
+      <div className="grid gap-3 grid-cols-2 lg:grid-cols-5">
+        <Card className="shadow-sm border-border bg-card">
+          <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Listrik</p>
+              <Zap size={14} className="text-amber-500" />
+            </div>
             <div className="text-sm sm:text-lg font-bold text-foreground truncate">Rp {getCategoryTotal('Listrik').toLocaleString()}</div>
           </CardContent>
         </Card>
-        <Card className="shadow-sm border-border px-1">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-3 pt-4 sm:px-6">
-            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Air</CardTitle>
-            <Droplets size={14} className="text-blue-500" />
-          </CardHeader>
-          <CardContent className="px-3 pb-4 sm:px-6 sm:pb-6">
+
+        <Card className="shadow-sm border-border bg-card">
+          <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Air</p>
+              <Droplets size={14} className="text-blue-500" />
+            </div>
             <div className="text-sm sm:text-lg font-bold text-foreground truncate">Rp {getCategoryTotal('Air').toLocaleString()}</div>
           </CardContent>
         </Card>
-        <Card className="shadow-sm border-border px-1">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-3 pt-4 sm:px-6">
-            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Gaji</CardTitle>
-            <Wallet size={14} className="text-emerald-500" />
-          </CardHeader>
-          <CardContent className="px-3 pb-4 sm:px-6 sm:pb-6">
+
+        <Card className="shadow-sm border-border bg-card">
+          <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Gaji</p>
+              <Wallet size={14} className="text-emerald-500" />
+            </div>
             <div className="text-sm sm:text-lg font-bold text-foreground truncate">Rp {getCategoryTotal('Gaji').toLocaleString()}</div>
           </CardContent>
         </Card>
-        <Card className="shadow-sm border-border px-1">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-3 pt-4 sm:px-6">
-            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Reparasi</CardTitle>
-            <Hammer size={14} className="text-muted-foreground" />
-          </CardHeader>
-          <CardContent className="px-3 pb-4 sm:px-6 sm:pb-6">
+
+        <Card className="shadow-sm border-border bg-card">
+          <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Reparasi</p>
+              <Hammer size={14} className="text-muted-foreground" />
+            </div>
             <div className="text-sm sm:text-lg font-bold text-foreground truncate">Rp {getCategoryTotal('Maintenance').toLocaleString()}</div>
           </CardContent>
         </Card>
+
         <Card className="shadow-sm border-border bg-foreground text-background col-span-2 lg:col-span-1">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
-            <CardTitle className="text-[10px] sm:text-xs font-semibold opacity-70">Total Ops</CardTitle>
-            <Receipt size={14} className="opacity-70" />
-          </CardHeader>
-          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
-            <div className="text-lg sm:text-2xl font-bold">Rp {totalOps.toLocaleString()}</div>
+          <CardContent className="p-4 flex flex-row items-center justify-between min-h-[60px]">
+            <div>
+              <p className="text-[10px] sm:text-xs font-semibold opacity-70">Total Ops</p>
+              <div className="text-xl sm:text-2xl font-bold tracking-tight">Rp {totalOps.toLocaleString()}</div>
+            </div>
+            <Receipt size={20} className="opacity-70" />
           </CardContent>
         </Card>
       </div>
 
-      <Card className="shadow-sm border-border overflow-hidden rounded-xl">
+      <Card className="shadow-sm border-border overflow-hidden rounded-2xl">
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto scrollbar-hide">
             <Table>
-              <TableHeader className="bg-muted/50">
+              <TableHeader className="bg-muted/50 border-b">
                 <TableRow className="hover:bg-transparent">
-                  <TableHead className="py-4 px-6 font-semibold text-foreground whitespace-nowrap text-[10px]">Tanggal</TableHead>
-                  <TableHead className="py-4 font-semibold text-foreground whitespace-nowrap text-[10px]">Kategori</TableHead>
-                  <TableHead className="py-4 font-semibold text-foreground whitespace-nowrap text-[10px]">Deskripsi</TableHead>
-                  <TableHead className="py-4 font-semibold text-foreground whitespace-nowrap text-[10px]">Jumlah</TableHead>
-                  <TableHead className="py-4 text-right px-6 font-semibold text-foreground whitespace-nowrap text-[10px]">Aksi</TableHead>
+                  <TableHead className="py-4 px-4 font-semibold text-foreground whitespace-nowrap text-[10px]">Info Operasional</TableHead>
+                  <TableHead className="py-4 px-4 font-semibold text-foreground whitespace-nowrap text-right text-[10px]">Jumlah</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {opsData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((o) => (
                   <TableRow key={o.id} className="group hover:bg-muted/50 transition-colors border-border">
-                    <TableCell className="py-5 px-6 font-medium text-muted-foreground text-[10px] sm:text-xs whitespace-nowrap">{o.date}</TableCell>
-                    <TableCell className="py-5 whitespace-nowrap">
-                      <Badge variant="outline" className="text-[9px] font-semibold px-2 py-0.5 bg-muted/30 border-border whitespace-nowrap">{o.category}</Badge>
+                    <TableCell className="py-4 px-4">
+                      <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-2">
+                          <Badge variant="outline" className="text-[9px] font-semibold px-1.5 py-0 bg-muted/30 border-border whitespace-nowrap">{o.category}</Badge>
+                          <span className="text-[10px] text-muted-foreground font-medium">{o.date}</span>
+                        </div>
+                        <span className="text-xs font-bold text-foreground truncate max-w-[180px] sm:max-w-none italic">"{o.description || "-"}"</span>
+                      </div>
                     </TableCell>
-                    <TableCell className="py-5 text-foreground font-semibold italic text-[10px] sm:text-xs truncate max-w-[120px] whitespace-nowrap">"{o.description || "-"}"</TableCell>
-                    <TableCell className="py-5 font-bold text-rose-600 text-xs sm:text-sm whitespace-nowrap">Rp {o.amount.toLocaleString()}</TableCell>
-                    <TableCell className="py-5 text-right px-6 whitespace-nowrap">
-                      <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-rose-500 rounded-full h-8 w-8 transition-colors">
-                        <Trash2 size={14} />
-                      </Button>
+                    <TableCell className="py-4 px-4 text-right whitespace-nowrap">
+                      <div className="flex flex-col items-end gap-1">
+                        <span className="font-bold text-sm sm:text-base text-rose-600 tracking-tight">
+                          - Rp {o.amount.toLocaleString()}
+                        </span>
+                        <div className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
                 {opsData.length === 0 && (
-                  <TableRow><TableCell colSpan={5} className="text-center py-12 text-muted-foreground italic text-sm">Belum ada data operasional.</TableCell></TableRow>
+                  <TableRow><TableCell colSpan={2} className="text-center py-12 text-muted-foreground italic text-sm">Belum ada data operasional.</TableCell></TableRow>
                 )}
               </TableBody>
             </Table>

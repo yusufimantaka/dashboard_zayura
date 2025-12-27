@@ -57,48 +57,56 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
-        <Card className="shadow-sm border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
-            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Saldo Kas</CardTitle>
-            <Wallet className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
-            <div className="text-base sm:text-2xl font-bold tracking-tight">Rp {nettMoney.toLocaleString()}</div>
-            <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5 font-medium italic">Likuiditas</p>
+      <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
+        <Card className="shadow-sm border-border bg-card">
+          <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Saldo Kas</p>
+              <Wallet className="h-3.5 w-3.5 text-muted-foreground" />
+            </div>
+            <div>
+              <div className="text-lg sm:text-2xl font-bold tracking-tight text-foreground">Rp {nettMoney.toLocaleString()}</div>
+              <p className="text-[9px] text-muted-foreground font-medium italic">Likuiditas</p>
+            </div>
           </CardContent>
         </Card>
         
-        <Card className="shadow-sm border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
-            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Nett Money</CardTitle>
-            <TrendingUp className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
-            <div className="text-base sm:text-2xl font-bold tracking-tight">Rp {nettMoney.toLocaleString()}</div>
-            <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5 font-medium italic">Laba Bersih</p>
+        <Card className="shadow-sm border-border bg-card">
+          <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Nett Money</p>
+              <TrendingUp className="h-3.5 w-3.5 text-muted-foreground" />
+            </div>
+            <div>
+              <div className="text-lg sm:text-2xl font-bold tracking-tight text-foreground">Rp {nettMoney.toLocaleString()}</div>
+              <p className="text-[9px] text-muted-foreground font-medium italic">Laba Bersih</p>
+            </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-sm border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
-            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Tersedia</CardTitle>
-            <DoorOpen className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
-            <div className="text-base sm:text-2xl font-bold tracking-tight">{availableRooms} <span className="text-[10px] sm:text-sm font-normal text-muted-foreground">Unit</span></div>
-            <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5 font-medium italic">Kesiapan</p>
+        <Card className="shadow-sm border-border bg-card">
+          <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Tersedia</p>
+              <DoorOpen className="h-3.5 w-3.5 text-muted-foreground" />
+            </div>
+            <div>
+              <div className="text-lg sm:text-2xl font-bold tracking-tight text-foreground">{availableRooms} <span className="text-[10px] sm:text-sm font-normal text-muted-foreground">Unit</span></div>
+              <p className="text-[9px] text-muted-foreground font-medium italic">Kesiapan</p>
+            </div>
           </CardContent>
         </Card>
 
-        <Card className="shadow-sm border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
-            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Laundry</CardTitle>
-            <WashingMachine className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
-            <div className="text-base sm:text-2xl font-bold tracking-tight">{activeLaundry} <span className="text-[10px] sm:text-sm font-normal text-muted-foreground">Order</span></div>
-            <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5 font-medium italic">Ongoing</p>
+        <Card className="shadow-sm border-border bg-card">
+          <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Laundry</p>
+              <WashingMachine className="h-3.5 w-3.5 text-muted-foreground" />
+            </div>
+            <div>
+              <div className="text-lg sm:text-2xl font-bold tracking-tight text-foreground">{activeLaundry} <span className="text-[10px] sm:text-sm font-normal text-muted-foreground">Order</span></div>
+              <p className="text-[9px] text-muted-foreground font-medium italic">Ongoing</p>
+            </div>
           </CardContent>
         </Card>
       </div>
