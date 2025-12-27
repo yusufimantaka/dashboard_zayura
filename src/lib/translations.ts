@@ -59,6 +59,9 @@ export const translations = {
     unpaid: "Belum Lunas",
     detail: "Detail",
     extend: "Extend",
+    profession: "Pekerjaan",
+    emergency_contact: "Kontak Darurat",
+    phone_number: "No. Telepon",
 
     // Finance
     finance_title: "Arus Keuangan",
@@ -168,6 +171,9 @@ export const translations = {
     unpaid: "Unpaid",
     detail: "Detail",
     extend: "Extend",
+    profession: "Profession",
+    emergency_contact: "Emergency Contact",
+    phone_number: "Phone Number",
 
     // Finance
     finance_title: "Financial Flow",

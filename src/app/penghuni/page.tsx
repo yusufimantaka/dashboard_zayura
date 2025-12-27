@@ -53,6 +53,8 @@ export default function PenghuniPage() {
   const [formData, setFormData] = useState({
     full_name: "",
     phone_number: "",
+    profession: "",
+    emergency_contact: "",
     room_id: "",
     start_date: new Date().toISOString().split('T')[0],
     duration_months: 1,
@@ -120,7 +122,9 @@ export default function PenghuniPage() {
 
         const resId = await addResident({
           full_name: formData.full_name,
-          phone_number: formData.phone_number
+          phone_number: formData.phone_number,
+          profession: formData.profession,
+          emergency_contact: formData.emergency_contact
         });
 
         const exitDate = new Date(formData.start_date);
@@ -139,7 +143,15 @@ export default function PenghuniPage() {
 
         await refreshData(); // Refresh data untuk memastikan status kamar terupdate
         setIsDialogOpen(false);
-        setFormData({ full_name: "", phone_number: "", room_id: "", start_date: new Date().toISOString().split('T')[0], duration_months: 1 });
+        setFormData({ 
+          full_name: "", 
+          phone_number: "", 
+          profession: "",
+          emergency_contact: "",
+          room_id: "", 
+          start_date: new Date().toISOString().split('T')[0], 
+          duration_months: 1 
+        });
       } catch (error) {
         console.error(error);
         alert("Gagal memproses check-in.");
@@ -239,6 +251,8 @@ export default function PenghuniPage() {
       ...tr, 
       resident_name: res?.full_name, 
       phone: res?.phone_number, 
+      profession: res?.profession,
+      emergency_contact: res?.emergency_contact,
       room_number: room?.room_number,
       room_type: room?.type,
       floor: room?.floor,
@@ -307,8 +321,15 @@ export default function PenghuniPage() {
           <DialogContent className="max-w-md">
             <DialogHeader><DialogTitle>{t('checkin_new')}</DialogTitle></DialogHeader>
             <div className="grid gap-4 py-4">
-              <div className="grid gap-2"><Label>Nama Lengkap</Label><Input value={formData.full_name} onChange={(e) => setFormData({...formData, full_name: e.target.value})} /></div>
-              <div className="grid gap-2"><Label>No. Telepon</Label><Input value={formData.phone_number} onChange={(e) => setFormData({...formData, phone_number: e.target.value})} /></div>
+              <div className="grid gap-2">
+                <Label>{t('resident_info')}</Label>
+                <div className="grid gap-2">
+                  <Input placeholder="Nama Lengkap" value={formData.full_name} onChange={(e) => setFormData({...formData, full_name: e.target.value})} />
+                  <Input placeholder={t('phone_number')} value={formData.phone_number} onChange={(e) => setFormData({...formData, phone_number: e.target.value})} />
+                  <Input placeholder={t('profession')} value={formData.profession} onChange={(e) => setFormData({...formData, profession: e.target.value})} />
+                  <Input placeholder={t('emergency_contact')} value={formData.emergency_contact} onChange={(e) => setFormData({...formData, emergency_contact: e.target.value})} />
+                </div>
+              </div>
               <div className="grid gap-2"><Label>Pilih Kamar</Label>
                 <UISelect onValueChange={(val) => setFormData({...formData, room_id: val})}>
                   <UISelectTrigger><UISelectValue placeholder="Pilih kamar tersedia" /></UISelectTrigger>
@@ -409,6 +430,9 @@ export default function PenghuniPage() {
                             <div className="flex items-center gap-2 mt-0.5">
                               <span className="text-xs font-bold text-muted-foreground">{t('rooms')} {item.room_number}</span>
                               <span className="text-[10px] font-semibold text-muted-foreground bg-secondary px-1.5 py-0 rounded uppercase tracking-tighter">L{item.floor}</span>
+                              {item.profession && (
+                                <span className="text-[10px] font-medium text-muted-foreground/70 border-l border-border pl-2 italic">{item.profession}</span>
+                              )}
                             </div>
                             <span className="text-[10px] text-muted-foreground font-medium mt-1">{t('checkout')}: {item.expected_end_date}</span>
                           </div>
@@ -454,7 +478,20 @@ export default function PenghuniPage() {
                 <div className="flex gap-4 mt-2">
                   <div className="text-xs sm:text-sm"><span className="text-muted-foreground">{t('unit')}:</span> <span className="font-semibold">{selectedResident?.room_number}</span></div>
                   <div className="text-xs sm:text-sm"><span className="text-muted-foreground">{t('floor')}:</span> <span className="font-semibold">{selectedResident?.floor}</span></div>
+                  {selectedResident?.phone && (
+                    <div className="text-xs sm:text-sm"><span className="text-muted-foreground">{t('phone_number')}:</span> <span className="font-semibold">{selectedResident?.phone}</span></div>
+                  )}
                 </div>
+                {(selectedResident?.profession || selectedResident?.emergency_contact) && (
+                  <div className="flex flex-wrap gap-x-6 gap-y-1 mt-3 pt-3 border-t border-border/50">
+                    {selectedResident?.profession && (
+                      <div className="text-[10px] sm:text-xs"><span className="text-muted-foreground uppercase font-bold tracking-tight">{t('profession')}:</span> <span className="font-medium ml-1">{selectedResident?.profession}</span></div>
+                    )}
+                    {selectedResident?.emergency_contact && (
+                      <div className="text-[10px] sm:text-xs"><span className="text-muted-foreground uppercase font-bold tracking-tight">{t('emergency_contact')}:</span> <span className="font-medium ml-1">{selectedResident?.emergency_contact}</span></div>
+                    )}
+                  </div>
+                )}
               </DialogHeader>
               {activeTab === 'active' && (
                 <Button onClick={() => openExtend(selectedResident)} className="w-full sm:w-auto h-9 text-[10px] sm:text-xs font-semibold px-4">

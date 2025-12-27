@@ -19,6 +19,9 @@ export interface Resident {
   full_name: string;
   phone_number: string;
   ktp_number?: string;
+  profession?: string;
+  emergency_contact?: string;
+  email?: string;
 }
 
 export interface Tenancy {
