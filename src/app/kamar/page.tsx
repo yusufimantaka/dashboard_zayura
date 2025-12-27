@@ -92,13 +92,15 @@ export default function KamarPage() {
           <p className="text-xs sm:text-sm text-muted-foreground">Manajemen unit dan aset hunian.</p>
         </div>
         
-        <div className="flex w-full sm:w-auto gap-2">
+        <div className="flex w-full gap-2">
           <Select value={filterFloor} onValueChange={setFilterFloor}>
-            <SelectTrigger className="flex-1 sm:w-[160px] h-10 bg-secondary/50 rounded-md border-border text-[10px] sm:text-xs font-semibold">
-              <Filter size={14} className="mr-2 text-muted-foreground" />
-              <SelectValue placeholder="Lantai" />
+            <SelectTrigger className="flex-1 h-11 bg-secondary/50 rounded-xl border-border text-sm font-medium">
+              <div className="flex items-center gap-2">
+                <Filter size={16} className="text-muted-foreground" />
+                <SelectValue placeholder="Lantai" />
+              </div>
             </SelectTrigger>
-            <SelectContent className="rounded-md border-border">
+            <SelectContent className="rounded-xl border-border">
               <SelectItem value="all">Semua Lantai</SelectItem>
               <SelectItem value="1">Lantai 01</SelectItem>
               <SelectItem value="2">Lantai 02</SelectItem>
@@ -108,9 +110,10 @@ export default function KamarPage() {
 
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button size="sm" className="flex-none sm:flex-1 h-10 px-4 text-[10px] sm:text-xs font-semibold">
-                <Plus size={16} className="mr-2" />
-                Tambah
+              <Button size="sm" className="h-11 px-5 rounded-xl font-semibold gap-2">
+                <Plus size={18} />
+                <span className="hidden sm:inline">Tambah Kamar</span>
+                <span className="sm:hidden">Tambah</span>
               </Button>
             </DialogTrigger>
             <DialogContent>
@@ -175,87 +178,104 @@ export default function KamarPage() {
         </div>
       </div>
 
-      <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
         <Card className="shadow-sm border-border bg-foreground text-background">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
-            <CardTitle className="text-[10px] sm:text-xs font-semibold opacity-70">Inventory</CardTitle>
-            <DoorClosed className="h-3.5 w-3.5 sm:h-4 sm:w-4 opacity-70" />
-          </CardHeader>
-          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
-            <div className="text-lg sm:text-2xl font-bold tracking-tight">{rooms.length}</div>
-            <p className="text-[9px] sm:text-[10px] opacity-50 font-medium mt-0.5">Unit Total</p>
+          <CardContent className="p-4 sm:p-6 flex flex-col justify-between h-full min-h-[100px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[10px] sm:text-xs font-semibold opacity-70">Inventory</p>
+              <DoorClosed className="h-4 w-4 opacity-70" />
+            </div>
+            <div>
+              <div className="text-2xl sm:text-3xl font-bold tracking-tight">{rooms.length}</div>
+              <p className="text-[9px] sm:text-[10px] opacity-50 font-medium mt-0.5">Unit Total</p>
+            </div>
           </CardContent>
         </Card>
-        <Card className="shadow-sm border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
-            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Terisi</CardTitle>
-            <div className="h-2 w-2 rounded-full bg-rose-500" />
-          </CardHeader>
-          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
-            <div className="text-lg sm:text-2xl font-bold tracking-tight">
-              {rooms.filter(r => r.status === 'occupied').length}
+        
+        <Card className="shadow-sm border-border bg-card">
+          <CardContent className="p-4 sm:p-6 flex flex-col justify-between h-full min-h-[100px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Terisi</p>
+              <div className="h-2 w-2 rounded-full bg-rose-500 mt-1" />
             </div>
-            <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5">Occupied</p>
+            <div>
+              <div className="text-2xl sm:text-3xl font-bold tracking-tight">
+                {rooms.filter(r => r.status === 'occupied').length}
+              </div>
+              <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5">Occupied</p>
+            </div>
           </CardContent>
         </Card>
-        <Card className="shadow-sm border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
-            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Ready</CardTitle>
-            <div className="h-2 w-2 rounded-full bg-emerald-500" />
-          </CardHeader>
-          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
-            <div className="text-lg sm:text-2xl font-bold tracking-tight">
-              {rooms.filter(r => r.status === 'available').length}
+
+        <Card className="shadow-sm border-border bg-card">
+          <CardContent className="p-4 sm:p-6 flex flex-col justify-between h-full min-h-[100px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Ready</p>
+              <div className="h-2 w-2 rounded-full bg-emerald-500 mt-1" />
             </div>
-            <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5">Available</p>
+            <div>
+              <div className="text-2xl sm:text-3xl font-bold tracking-tight">
+                {rooms.filter(r => r.status === 'available').length}
+              </div>
+              <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5">Available</p>
+            </div>
           </CardContent>
         </Card>
-        <Card className="shadow-sm border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
-            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Repair</CardTitle>
-            <div className="h-2 w-2 rounded-full bg-amber-500" />
-          </CardHeader>
-          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
-            <div className="text-lg sm:text-2xl font-bold tracking-tight">
-              {rooms.filter(r => r.status === 'maintenance').length}
+
+        <Card className="shadow-sm border-border bg-card">
+          <CardContent className="p-4 sm:p-6 flex flex-col justify-between h-full min-h-[100px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Repair</p>
+              <div className="h-2 w-2 rounded-full bg-amber-500 mt-1" />
             </div>
-            <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5">Maintenance</p>
+            <div>
+              <div className="text-2xl sm:text-3xl font-bold tracking-tight">
+                {rooms.filter(r => r.status === 'maintenance').length}
+              </div>
+              <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5">Maintenance</p>
+            </div>
           </CardContent>
         </Card>
       </div>
 
-      <Card className="border-border shadow-sm bg-card overflow-hidden rounded-xl">
+      <Card className="border-border shadow-sm bg-card overflow-hidden rounded-2xl">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <Table>
-              <TableHeader className="bg-muted/50">
+              <TableHeader className="bg-muted/50 border-b">
                 <TableRow className="hover:bg-transparent">
-                  <TableHead className="py-4 px-6 font-semibold text-foreground whitespace-nowrap">No. Kamar</TableHead>
-                  <TableHead className="py-4 font-semibold text-foreground whitespace-nowrap text-center">Lantai</TableHead>
-                  <TableHead className="py-4 font-semibold text-foreground whitespace-nowrap text-center">Tipe</TableHead>
-                  <TableHead className="py-4 font-semibold text-foreground whitespace-nowrap text-center">Status</TableHead>
-                  <TableHead className="py-4 font-semibold text-foreground whitespace-nowrap">Harga</TableHead>
-                  <TableHead className="py-4 text-right px-6 font-semibold text-foreground whitespace-nowrap">Aksi</TableHead>
+                  <TableHead className="py-4 px-6 font-semibold text-foreground text-xs whitespace-nowrap">Unit & Tipe</TableHead>
+                  <TableHead className="py-4 font-semibold text-foreground text-xs whitespace-nowrap text-center hidden sm:table-cell">Lantai</TableHead>
+                  <TableHead className="py-4 font-semibold text-foreground text-xs whitespace-nowrap text-center">Status</TableHead>
+                  <TableHead className="py-4 font-semibold text-foreground text-xs whitespace-nowrap text-right pr-6">Harga</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredRooms.map((room) => (
                   <TableRow key={room.id} className="group hover:bg-muted/50 transition-colors border-border">
-                    <TableCell className="py-5 px-6 font-bold text-foreground text-base sm:text-lg whitespace-nowrap">{room.room_number}</TableCell>
-                    <TableCell className="py-5 text-center whitespace-nowrap">
-                      <span className="text-[10px] sm:text-xs font-semibold text-muted-foreground bg-secondary px-2 py-1 rounded-full">L{room.floor}</span>
+                    <TableCell className="py-5 px-6 whitespace-nowrap">
+                      <div className="flex flex-col">
+                        <span className="font-bold text-foreground text-base sm:text-lg">Kamar {room.room_number}</span>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <Badge variant="outline" className="text-[9px] font-semibold px-1.5 py-0 bg-muted/50 border-border uppercase tracking-tighter">{room.type}</Badge>
+                          <span className="text-[10px] font-semibold text-muted-foreground sm:hidden">L{room.floor}</span>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="py-5 text-center whitespace-nowrap hidden sm:table-cell">
+                      <span className="text-xs font-semibold text-muted-foreground bg-secondary px-2 py-1 rounded-lg">Lantai {room.floor}</span>
                     </TableCell>
                     <TableCell className="py-5 text-center whitespace-nowrap">
-                      <Badge variant="outline" className="text-[9px] font-semibold px-2 py-0.5 bg-muted/50 border-border">{room.type}</Badge>
+                      <div className="flex flex-col items-center gap-1">
+                        <div className={`w-2 h-2 rounded-full ${room.status === 'available' ? 'bg-emerald-500' : room.status === 'occupied' ? 'bg-rose-500' : 'bg-amber-500'}`} />
+                        <span className="text-[9px] font-bold text-muted-foreground uppercase hidden sm:inline">{room.status}</span>
+                      </div>
                     </TableCell>
-                    <TableCell className="py-5 text-center whitespace-nowrap">
-                      <div className={`mx-auto w-2 h-2 rounded-full ${room.status === 'available' ? 'bg-emerald-500' : room.status === 'occupied' ? 'bg-rose-500' : 'bg-amber-500'}`} />
-                    </TableCell>
-                    <TableCell className="py-5 font-bold text-foreground tracking-tight text-xs sm:text-sm whitespace-nowrap">Rp {room.price_per_month.toLocaleString()}</TableCell>
-                    <TableCell className="py-5 text-right px-6 whitespace-nowrap">
-                      <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-muted rounded-full">
-                        <MoreVertical size={14} className="text-muted-foreground" />
-                      </Button>
+                    <TableCell className="py-5 text-right pr-6 whitespace-nowrap">
+                      <div className="flex flex-col items-end">
+                        <span className="font-bold text-foreground tracking-tight text-sm sm:text-base">Rp {room.price_per_month.toLocaleString()}</span>
+                        <span className="text-[9px] text-muted-foreground font-medium">/ bulan</span>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
