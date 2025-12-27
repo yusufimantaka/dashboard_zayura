@@ -35,7 +35,7 @@ import { useData } from "@/context/DataContext";
 import { cn } from "@/lib/utils";
 
 export default function PenghuniPage() {
-  const { residents, tenancies, rooms, invoices, transactions, addResident, addTenancy, updateRoomStatus, addInvoice, payInvoice, checkoutResident, deleteTenancy, extendTenancy } = useData();
+  const { residents, tenancies, rooms, invoices, transactions, addResident, addTenancy, updateRoomStatus, addInvoice, payInvoice, checkoutResident, deleteTenancy, extendTenancy, refreshData } = useData();
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("active");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -134,6 +134,7 @@ export default function PenghuniPage() {
         await updateRoomStatus(formData.room_id, 'occupied');
         await generateInvoices(tenancyId, resId, formData.start_date, duration, room.type, room.price_per_month);
 
+        await refreshData(); // Refresh data untuk memastikan status kamar terupdate
         setIsDialogOpen(false);
         setFormData({ full_name: "", phone_number: "", room_id: "", start_date: new Date().toISOString().split('T')[0], duration_months: 1 });
       } catch (error) {
@@ -249,7 +250,8 @@ export default function PenghuniPage() {
     .filter(item => 
       item.resident_name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
       item.room_number?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    )
+    .sort((a, b) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime());
 
   const openDetail = (resident: any) => {
     setSelectedResident(resident);
