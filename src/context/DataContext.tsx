@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { supabase } from '@/lib/supabase';
+import { translations, Language, TranslationKey } from '@/lib/translations';
 
 // Types
 export interface Room {
@@ -81,6 +82,11 @@ interface DataContextType {
   employees: Employee[];
   user: any | null;
   loading: boolean;
+  language: Language;
+  themeColor: 'default' | 'gold' | 'emerald' | 'rose';
+  t: (key: TranslationKey) => string;
+  setLanguage: (lang: Language) => void;
+  setThemeColor: (theme: 'default' | 'gold' | 'emerald' | 'rose') => void;
   addRoom: (room: Omit<Room, 'id'>) => Promise<void>;
   addResident: (resident: Omit<Resident, 'id'>) => Promise<string>;
   addTenancy: (tenancy: Omit<Tenancy, 'id'>) => Promise<string>;
@@ -111,6 +117,43 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [user, setUser] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
+  const [language, setLanguageState] = useState<Language>('id');
+  const [themeColor, setThemeColorState] = useState<'default' | 'gold' | 'emerald' | 'rose'>('default');
+
+  const t = (key: TranslationKey): string => {
+    return translations[language][key] || key;
+  };
+
+  useEffect(() => {
+    const savedLang = localStorage.getItem('zayura_lang') as Language;
+    const savedTheme = localStorage.getItem('zayura_theme_color') as any;
+    if (savedLang) setLanguageState(savedLang);
+    if (savedTheme) {
+      setThemeColorState(savedTheme);
+      // Apply theme class to html
+      const root = window.document.documentElement;
+      root.classList.remove('theme-gold', 'theme-emerald', 'theme-rose');
+      if (savedTheme !== 'default') {
+        root.classList.add(`theme-${savedTheme}`);
+      }
+    }
+  }, []);
+
+  const setLanguage = (lang: 'id' | 'en') => {
+    setLanguageState(lang);
+    localStorage.setItem('zayura_lang', lang);
+  };
+
+  const setThemeColor = (theme: 'default' | 'gold' | 'emerald' | 'rose') => {
+    setThemeColorState(theme);
+    localStorage.setItem('zayura_theme_color', theme);
+    // Apply theme class to html
+    const root = window.document.documentElement;
+    root.classList.remove('theme-gold', 'theme-emerald', 'theme-rose');
+    if (theme !== 'default') {
+      root.classList.add(`theme-${theme}`);
+    }
+  };
 
   const fetchData = async () => {
     try {
@@ -305,6 +348,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   return (
     <DataContext.Provider value={{ 
       rooms, residents, tenancies, invoices, transactions, laundry, employees, user, loading,
+      language, themeColor, t, setLanguage, setThemeColor,
       addRoom, addResident, addTenancy, addInvoice, addTransaction, addLaundry, addEmployee,
       updateRoomStatus, updateLaundryStatus, payInvoice, checkoutResident, deleteTenancy, extendTenancy,
       login, logout, refreshData: fetchData

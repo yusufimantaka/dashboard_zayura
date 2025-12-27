@@ -26,7 +26,7 @@ import { Label } from "@/components/ui/label";
 import { useData } from "@/context/DataContext";
 
 export default function KaryawanPage() {
-  const { employees, addEmployee, transactions, addTransaction } = useData();
+  const { employees, addEmployee, transactions, addTransaction, t } = useData();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   
   const [formData, setFormData] = useState({
@@ -79,10 +79,10 @@ export default function KaryawanPage() {
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
     
-    return transactions.some(t => {
-      const d = new Date(t.date);
-      return t.category === 'Gaji Karyawan' && 
-             t.description.includes(employeeName) &&
+    return transactions.some(tr => {
+      const d = new Date(tr.date);
+      return tr.category === 'Gaji Karyawan' && 
+             tr.description.includes(employeeName) &&
              d.getMonth() === currentMonth &&
              d.getFullYear() === currentYear;
     });
@@ -92,20 +92,20 @@ export default function KaryawanPage() {
     <div className="space-y-6 pb-10">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="space-y-1">
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">Manajemen Staf</h2>
-          <p className="text-xs sm:text-sm text-muted-foreground">Kelola data karyawan dan payroll.</p>
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">{t('staff_title')}</h2>
+          <p className="text-xs sm:text-sm text-muted-foreground">{t('staff_subtitle')}</p>
         </div>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button size="sm" className="h-10 px-4 text-[10px] sm:text-xs font-semibold shadow-sm w-full md:w-auto">
               <Plus size={18} className="mr-2" />
-              Tambah Karyawan
+              {t('add_employee')}
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Tambah Karyawan Baru</DialogTitle>
+              <DialogTitle>{t('add_employee')}</DialogTitle>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
@@ -117,7 +117,7 @@ export default function KaryawanPage() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label>Posisi / Jabatan</Label>
+                <Label>{t('position')} / Jabatan</Label>
                 <Input 
                   placeholder="Contoh: Kebersihan, Keamanan"
                   value={formData.position}
@@ -125,7 +125,7 @@ export default function KaryawanPage() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label>Gaji per Bulan (Rp)</Label>
+                <Label>{t('salary')} per Bulan (Rp)</Label>
                 <Input 
                   type="number" 
                   placeholder="2000000"
@@ -134,7 +134,7 @@ export default function KaryawanPage() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label>Tanggal Bergabung</Label>
+                <Label>{t('join_date')}</Label>
                 <Input 
                   type="date"
                   value={formData.join_date}
@@ -150,75 +150,81 @@ export default function KaryawanPage() {
         </Dialog>
       </div>
 
-      <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-3">
-        <Card className="shadow-sm border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
-            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Total Staf</CardTitle>
-            <User size={14} className="text-muted-foreground" />
-          </CardHeader>
-          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
-            <div className="text-lg sm:text-2xl font-bold tracking-tight text-foreground">{employees.length}</div>
-            <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5 tracking-tighter">Aktif</p>
+      <div className="grid gap-3 grid-cols-2 lg:grid-cols-3">
+        <Card className="shadow-sm border-border bg-card">
+          <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">{t('total_staff')}</p>
+              <User size={14} className="text-muted-foreground" />
+            </div>
+            <div>
+              <div className="text-lg sm:text-2xl font-bold tracking-tight text-foreground">{employees.length}</div>
+              <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5">{t('active')}</p>
+            </div>
           </CardContent>
         </Card>
-        <Card className="shadow-sm border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
-            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Gaji Paid</CardTitle>
-            <CheckCircle2 size={14} className="text-emerald-500" />
-          </CardHeader>
-          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
-            <div className="text-lg sm:text-2xl font-bold tracking-tight text-emerald-600">
-              {employees.filter(e => isSalaryPaid(e.name)).length}
+        <Card className="shadow-sm border-border bg-card">
+          <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">{t('salary_paid')}</p>
+              <CheckCircle2 size={14} className="text-emerald-500" />
             </div>
-            <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5 tracking-tighter">Bulan Ini</p>
+            <div>
+              <div className="text-lg sm:text-2xl font-bold tracking-tight text-emerald-600">
+                {employees.filter(e => isSalaryPaid(e.name)).length}
+              </div>
+              <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5">Bulan Ini</p>
+            </div>
           </CardContent>
         </Card>
-        <Card className="shadow-sm border-border col-span-2 lg:col-span-1">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
-            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Outstanding</CardTitle>
-            <Clock size={14} className="text-rose-500" />
-          </CardHeader>
-          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
-            <div className="text-lg sm:text-2xl font-bold tracking-tight text-rose-600">
-              {employees.filter(e => !isSalaryPaid(e.name)).length}
+        <Card className="shadow-sm border-border bg-card col-span-2 lg:col-span-1">
+          <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
+            <div className="flex justify-between items-start">
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">{t('outstanding')}</p>
+              <Clock size={14} className="text-rose-500" />
             </div>
-            <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5 tracking-tighter">Belum Bayar</p>
+            <div>
+              <div className="text-lg sm:text-2xl font-bold tracking-tight text-rose-600">
+                {employees.filter(e => !isSalaryPaid(e.name)).length}
+              </div>
+              <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5">Belum Bayar</p>
+            </div>
           </CardContent>
         </Card>
       </div>
 
       <Card className="shadow-sm border-border overflow-hidden rounded-xl">
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto scrollbar-hide">
             <Table>
-              <TableHeader className="bg-muted/50">
+              <TableHeader className="bg-muted/50 border-b">
                 <TableRow className="hover:bg-transparent">
-                  <TableHead className="py-4 px-6 font-semibold text-foreground whitespace-nowrap text-[10px]">Karyawan</TableHead>
-                  <TableHead className="py-4 font-semibold text-foreground whitespace-nowrap text-[10px]">Posisi</TableHead>
-                  <TableHead className="py-4 font-semibold text-foreground whitespace-nowrap text-right text-[10px]">Gaji</TableHead>
-                  <TableHead className="py-4 font-semibold text-foreground whitespace-nowrap text-center text-[10px]">Status</TableHead>
-                  <TableHead className="py-4 text-right px-6 font-semibold text-foreground whitespace-nowrap text-[10px]">Aksi</TableHead>
+                  <TableHead className="py-4 px-4 font-semibold text-foreground whitespace-nowrap text-[10px]">{t('employees')}</TableHead>
+                  <TableHead className="py-4 px-4 font-semibold text-foreground whitespace-nowrap text-[10px]">{t('position')}</TableHead>
+                  <TableHead className="py-4 px-4 font-semibold text-foreground whitespace-nowrap text-right text-[10px]">{t('salary')}</TableHead>
+                  <TableHead className="py-4 px-4 font-semibold text-foreground whitespace-nowrap text-center text-[10px]">{t('status')}</TableHead>
+                  <TableHead className="py-4 px-4 text-right font-semibold text-foreground whitespace-nowrap text-[10px]">{t('action')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {employees.map((e) => (
                   <TableRow key={e.id} className="group hover:bg-muted/50 transition-colors border-border">
-                    <TableCell className="py-5 px-6 whitespace-nowrap">
+                    <TableCell className="py-4 px-4 whitespace-nowrap">
                       <div className="flex flex-col">
                         <span className="font-bold text-foreground text-sm sm:text-base">{e.name}</span>
-                        <span className="text-[9px] text-muted-foreground font-medium tracking-tighter mt-0.5">Mulai {e.join_date}</span>
+                        <span className="text-[9px] text-muted-foreground font-medium tracking-tighter mt-0.5">{t('join_date')} {e.join_date}</span>
                       </div>
                     </TableCell>
-                    <TableCell className="py-5 whitespace-nowrap text-[10px] font-semibold text-muted-foreground">{e.position}</TableCell>
-                    <TableCell className="py-5 text-right font-bold text-foreground text-xs sm:text-sm whitespace-nowrap">Rp {e.salary.toLocaleString()}</TableCell>
-                    <TableCell className="py-5 text-center whitespace-nowrap">
+                    <TableCell className="py-4 px-4 whitespace-nowrap text-[10px] font-semibold text-muted-foreground">{e.position}</TableCell>
+                    <TableCell className="py-4 px-4 text-right font-bold text-foreground text-xs sm:text-sm whitespace-nowrap">Rp {e.salary.toLocaleString()}</TableCell>
+                    <TableCell className="py-4 px-4 text-center whitespace-nowrap">
                       {isSalaryPaid(e.name) ? (
                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mx-auto" />
                       ) : (
                         <div className="w-1.5 h-1.5 rounded-full bg-rose-500 mx-auto animate-pulse" />
                       )}
                     </TableCell>
-                    <TableCell className="py-5 text-right px-6 whitespace-nowrap">
+                    <TableCell className="py-4 px-4 text-right whitespace-nowrap">
                       {!isSalaryPaid(e.name) && (
                         <Button variant="outline" size="sm" className="h-8 text-[9px] font-semibold px-3 bg-secondary/50" onClick={() => handlePaySalary(e)}>
                           Bayar

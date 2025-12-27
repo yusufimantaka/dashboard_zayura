@@ -94,6 +94,25 @@
   --ring: oklch(0.98 0 0);
 }
 
+/* Luxury Color Palettes */
+.theme-gold {
+  --primary: oklch(0.75 0.15 80);
+  --primary-foreground: oklch(0.1 0.02 80);
+  --ring: oklch(0.75 0.15 80);
+}
+
+.theme-emerald {
+  --primary: oklch(0.65 0.15 160);
+  --primary-foreground: oklch(0.99 0.02 160);
+  --ring: oklch(0.65 0.15 160);
+}
+
+.theme-rose {
+  --primary: oklch(0.65 0.15 15);
+  --primary-foreground: oklch(0.99 0.02 15);
+  --ring: oklch(0.65 0.15 15);
+}
+
 @layer utilities {
   .pb-safe {
     padding-bottom: env(safe-area-inset-bottom);

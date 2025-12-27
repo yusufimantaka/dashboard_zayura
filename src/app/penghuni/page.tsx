@@ -35,7 +35,7 @@ import { useData } from "@/context/DataContext";
 import { cn } from "@/lib/utils";
 
 export default function PenghuniPage() {
-  const { residents, tenancies, rooms, invoices, transactions, addResident, addTenancy, updateRoomStatus, addInvoice, payInvoice, checkoutResident, deleteTenancy, extendTenancy, refreshData } = useData();
+  const { residents, tenancies, rooms, invoices, transactions, addResident, addTenancy, updateRoomStatus, addInvoice, payInvoice, checkoutResident, deleteTenancy, extendTenancy, refreshData, t } = useData();
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("active");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -226,14 +226,14 @@ export default function PenghuniPage() {
 
   const getResidentInvoices = (residentId: string) => invoices.filter(inv => inv.resident_id === residentId);
 
-  const mapTenancyData = (t: any) => {
-    const res = residents.find(r => r.id === t.resident_id);
-    const room = rooms.find(rm => rm.id === t.room_id);
-    const resInvoices = invoices.filter(inv => inv.resident_id === t.resident_id);
+  const mapTenancyData = (tr: any) => {
+    const res = residents.find(r => r.id === tr.resident_id);
+    const room = rooms.find(rm => rm.id === tr.room_id);
+    const resInvoices = invoices.filter(inv => inv.resident_id === tr.resident_id);
     const hasUnpaid = resInvoices.some(inv => inv.status === 'unpaid');
 
     return { 
-      ...t, 
+      ...tr, 
       resident_name: res?.full_name, 
       phone: res?.phone_number, 
       room_number: room?.room_number,
@@ -243,8 +243,8 @@ export default function PenghuniPage() {
     };
   };
 
-  const activeResidents = tenancies.filter(t => t.status === 'active').map(mapTenancyData);
-  const historyResidents = tenancies.filter(t => t.status === 'completed').map(mapTenancyData);
+  const activeResidents = tenancies.filter(tr => tr.status === 'active').map(mapTenancyData);
+  const historyResidents = tenancies.filter(tr => tr.status === 'completed').map(mapTenancyData);
 
   const displayList = (activeTab === 'active' ? activeResidents : historyResidents)
     .filter(item => 
@@ -279,7 +279,7 @@ export default function PenghuniPage() {
   };
 
   const openTransactionDetail = (invoiceId: string) => {
-    const transaction = transactions.find(t => t.invoice_id === invoiceId);
+    const transaction = transactions.find(tr => tr.invoice_id === invoiceId);
     if (transaction) {
       setSelectedTransaction(transaction);
       setIsTransactionDetailOpen(true);
@@ -290,19 +290,19 @@ export default function PenghuniPage() {
     <div className="space-y-6 pb-10">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="space-y-1">
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">Data Penghuni</h2>
-          <p className="text-xs sm:text-sm text-muted-foreground">Manajemen residen dan status pembayaran.</p>
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">{t('residents_title')}</h2>
+          <p className="text-xs sm:text-sm text-muted-foreground">{t('residents_subtitle')}</p>
         </div>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button size="sm" className="w-full sm:w-auto h-10 px-4 text-[10px] sm:text-xs font-semibold">
               <Plus size={18} className="mr-2" />
-              Check-in Baru
+              {t('checkin_new')}
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-md">
-            <DialogHeader><DialogTitle>Check-in Penghuni Baru</DialogTitle></DialogHeader>
+            <DialogHeader><DialogTitle>{t('checkin_new')}</DialogTitle></DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2"><Label>Nama Lengkap</Label><Input value={formData.full_name} onChange={(e) => setFormData({...formData, full_name: e.target.value})} /></div>
               <div className="grid gap-2"><Label>No. Telepon</Label><Input value={formData.phone_number} onChange={(e) => setFormData({...formData, phone_number: e.target.value})} /></div>
@@ -335,7 +335,7 @@ export default function PenghuniPage() {
         <Card className="shadow-sm border-border bg-card">
           <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
             <div className="flex justify-between items-start">
-              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Aktif</p>
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">{t('active')}</p>
               <Users size={14} className="text-emerald-500" />
             </div>
             <div>
@@ -348,7 +348,7 @@ export default function PenghuniPage() {
         <Card className="shadow-sm border-border bg-card">
           <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
             <div className="flex justify-between items-start">
-              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Riwayat</p>
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">{t('history')}</p>
               <History size={14} className="text-muted-foreground" />
             </div>
             <div>
@@ -362,12 +362,12 @@ export default function PenghuniPage() {
       <Tabs defaultValue="active" onValueChange={setActiveTab} className="space-y-6">
         <div className="flex flex-col gap-4">
           <TabsList className="bg-secondary/30 p-1 border border-border/50 h-11 w-full max-w-[400px]">
-            <TabsTrigger value="active" className="flex-1 flex items-center gap-2 rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm text-[10px] sm:text-xs font-semibold px-4"><Users size={14} /> Aktif</TabsTrigger>
-            <TabsTrigger value="history" className="flex-1 flex items-center gap-2 rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm text-[10px] sm:text-xs font-semibold px-4"><History size={14} /> Riwayat</TabsTrigger>
+            <TabsTrigger value="active" className="flex-1 flex items-center gap-2 rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm text-[10px] sm:text-xs font-semibold px-4"><Users size={14} /> {t('active')}</TabsTrigger>
+            <TabsTrigger value="history" className="flex-1 flex items-center gap-2 rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm text-[10px] sm:text-xs font-semibold px-4"><History size={14} /> {t('history')}</TabsTrigger>
           </TabsList>
           <div className="relative w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
-            <Input className="pl-10 h-11 bg-background border-border shadow-sm focus:ring-primary/20 text-sm" placeholder="Cari nama atau nomor kamar..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+            <Input className="pl-10 h-11 bg-background border-border shadow-sm focus:ring-primary/20 text-sm" placeholder={t('search_placeholder')} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
           </div>
         </div>
 
@@ -378,9 +378,9 @@ export default function PenghuniPage() {
                 <Table>
                   <TableHeader className="bg-muted/50 border-b">
                     <TableRow className="hover:bg-transparent">
-                      <TableHead className="py-4 px-4 font-semibold text-foreground whitespace-nowrap text-[10px]">Info Penghuni</TableHead>
-                      <TableHead className="py-4 px-4 font-semibold text-foreground whitespace-nowrap text-center text-[10px]">Tagihan</TableHead>
-                      <TableHead className="py-4 px-4 font-semibold text-foreground whitespace-nowrap text-right text-[10px]">Aksi</TableHead>
+                      <TableHead className="py-4 px-4 font-semibold text-foreground whitespace-nowrap text-[10px]">{t('resident_info')}</TableHead>
+                      <TableHead className="py-4 px-4 font-semibold text-foreground whitespace-nowrap text-center text-[10px]">{t('bill')}</TableHead>
+                      <TableHead className="py-4 px-4 font-semibold text-foreground whitespace-nowrap text-right text-[10px]">{t('action')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -390,10 +390,10 @@ export default function PenghuniPage() {
                           <div className="flex flex-col">
                             <span className="font-bold text-foreground text-sm sm:text-base">{item.resident_name}</span>
                             <div className="flex items-center gap-2 mt-0.5">
-                              <span className="text-xs font-bold text-muted-foreground">Kamar {item.room_number}</span>
+                              <span className="text-xs font-bold text-muted-foreground">{t('rooms')} {item.room_number}</span>
                               <span className="text-[10px] font-semibold text-muted-foreground bg-secondary px-1.5 py-0 rounded uppercase tracking-tighter">L{item.floor}</span>
                             </div>
-                            <span className="text-[10px] text-muted-foreground font-medium mt-1">Keluar: {item.expected_end_date}</span>
+                            <span className="text-[10px] text-muted-foreground font-medium mt-1">{t('checkout')}: {item.expected_end_date}</span>
                           </div>
                         </TableCell>
                         <TableCell className="py-4 px-4 text-center">
@@ -403,12 +403,12 @@ export default function PenghuniPage() {
                             ) : (
                               <div className="w-2 h-2 rounded-full bg-emerald-500" />
                             )}
-                            <span className="text-[9px] font-bold text-muted-foreground uppercase">{item.hasUnpaid ? 'Tagihan' : 'Lunas'}</span>
+                            <span className="text-[9px] font-bold text-muted-foreground uppercase">{item.hasUnpaid ? t('bill') : t('paid')}</span>
                           </div>
                         </TableCell>
                         <TableCell className="py-4 px-4 text-right whitespace-nowrap">
                           <div className="flex flex-col items-end gap-2">
-                            <Button variant="outline" size="sm" onClick={() => openDetail(item)} className="h-8 text-[10px] font-semibold px-3 bg-secondary/50 rounded-lg">Detail</Button>
+                            <Button variant="outline" size="sm" onClick={() => openDetail(item)} className="h-8 text-[10px] font-semibold px-3 bg-secondary/50 rounded-lg">{t('detail')}</Button>
                             {activeTab === 'active' ? (
                               <Button variant="ghost" size="sm" onClick={() => handleCheckout(item.id)} className="text-muted-foreground hover:text-rose-500 transition-colors h-7 w-7 p-0 rounded-full"><LogOut size={14} /></Button>
                             ) : (
@@ -433,15 +433,15 @@ export default function PenghuniPage() {
           <div className="p-6 border-b bg-muted/20">
             <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
               <DialogHeader>
-                <DialogTitle className="text-xl sm:text-2xl font-bold flex items-center gap-2"><Receipt className="text-primary" /> Tagihan: {selectedResident?.resident_name}</DialogTitle>
+                <DialogTitle className="text-xl sm:text-2xl font-bold flex items-center gap-2"><Receipt className="text-primary" /> {t('bill')}: {selectedResident?.resident_name}</DialogTitle>
                 <div className="flex gap-4 mt-2">
-                  <div className="text-xs sm:text-sm"><span className="text-muted-foreground">Unit:</span> <span className="font-semibold">{selectedResident?.room_number}</span></div>
-                  <div className="text-xs sm:text-sm"><span className="text-muted-foreground">Lantai:</span> <span className="font-semibold">{selectedResident?.floor}</span></div>
+                  <div className="text-xs sm:text-sm"><span className="text-muted-foreground">{t('unit')}:</span> <span className="font-semibold">{selectedResident?.room_number}</span></div>
+                  <div className="text-xs sm:text-sm"><span className="text-muted-foreground">{t('floor')}:</span> <span className="font-semibold">{selectedResident?.floor}</span></div>
                 </div>
               </DialogHeader>
               {activeTab === 'active' && (
                 <Button onClick={() => openExtend(selectedResident)} className="w-full sm:w-auto h-9 text-[10px] sm:text-xs font-semibold px-4">
-                  <Plus size={14} className="mr-2" /> Extend
+                  <Plus size={14} className="mr-2" /> {t('extend')}
                 </Button>
               )}
             </div>
@@ -468,7 +468,7 @@ export default function PenghuniPage() {
                           <Button size="sm" onClick={() => openPayment(inv)} className="h-7 text-[9px] font-semibold px-3 bg-rose-500 hover:bg-rose-600 text-white">Bayar</Button>
                         ) : (
                           <Button variant="outline" size="sm" onClick={() => openTransactionDetail(inv.id)} className="h-7 text-[9px] font-semibold px-2 gap-1 bg-emerald-500/10 text-emerald-600 border-emerald-500/20">
-                            <CheckCircle2 size={10} /> Detail
+                            <CheckCircle2 size={10} /> {t('detail')}
                           </Button>
                         )}
                       </TableCell>
@@ -490,7 +490,7 @@ export default function PenghuniPage() {
       {/* Dialog Extend */}
       <Dialog open={isExtendDialogOpen} onOpenChange={setIsExtendDialogOpen}>
         <DialogContent className="max-w-md">
-          <DialogHeader><DialogTitle>Extend Sewa</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle>{t('extend')} Sewa</DialogTitle></DialogHeader>
             <div className="grid gap-4 py-4 text-center sm:text-left">
             <div className="bg-primary/5 p-4 rounded-xl border border-primary/10">
               <p className="text-[10px] text-muted-foreground font-semibold mb-1">Mulai Dari</p>

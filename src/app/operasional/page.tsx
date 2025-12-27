@@ -33,7 +33,7 @@ import {
 import { useData } from "@/context/DataContext";
 
 export default function OperasionalPage() {
-  const { transactions, addTransaction } = useData();
+  const { transactions, addTransaction, t } = useData();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   
   // State untuk filter bulan dan tahun
@@ -72,16 +72,16 @@ export default function OperasionalPage() {
   };
 
   // Filter data berdasarkan bulan dan tahun terpilih
-  const opsData = transactions.filter(t => {
-    const d = new Date(t.date);
-    return t.type === 'expense' && 
+  const opsData = transactions.filter(tr => {
+    const d = new Date(tr.date);
+    return tr.type === 'expense' && 
            d.getMonth() === selectedMonth && 
            d.getFullYear() === selectedYear;
   });
   
   const getCategoryTotal = (cat: string) => {
     return opsData
-      .filter(t => t.category.toLowerCase().includes(cat.toLowerCase()))
+      .filter(tr => tr.category.toLowerCase().includes(cat.toLowerCase()))
       .reduce((acc, curr) => acc + curr.amount, 0);
   };
 
@@ -96,8 +96,8 @@ export default function OperasionalPage() {
     <div className="space-y-6 pb-10">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="space-y-1">
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">Biaya Operasional</h2>
-          <p className="text-xs sm:text-sm text-muted-foreground">Monitoring pengeluaran unit.</p>
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">{t('ops_title')}</h2>
+          <p className="text-xs sm:text-sm text-muted-foreground">{t('ops_subtitle')}</p>
         </div>
 
         <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-2">
@@ -127,16 +127,16 @@ export default function OperasionalPage() {
             <DialogTrigger asChild>
               <Button size="sm" className="h-10 px-4 text-[10px] sm:text-xs font-semibold shadow-sm w-full sm:w-auto">
                 <Plus size={18} className="mr-2" />
-                Input Pengeluaran
+                {t('input_expense')}
               </Button>
             </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Tambah Biaya Operasional</DialogTitle>
+              <DialogTitle>{t('input_expense')}</DialogTitle>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <Label>Kategori</Label>
+                <Label>{t('category')}</Label>
                 <Select onValueChange={(val) => setFormData({...formData, category: val})}>
                   <SelectTrigger>
                     <SelectValue placeholder="Pilih kategori" />
@@ -152,7 +152,7 @@ export default function OperasionalPage() {
                 </Select>
               </div>
               <div className="grid gap-2">
-                <Label>Jumlah (Rp)</Label>
+                <Label>{t('amount')} (Rp)</Label>
                 <Input 
                   type="number" 
                   placeholder="500000"
@@ -161,7 +161,7 @@ export default function OperasionalPage() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label>Deskripsi</Label>
+                <Label>{t('description')}</Label>
                 <Input 
                   placeholder="Contoh: Token listrik utama"
                   value={formData.description}
@@ -169,7 +169,7 @@ export default function OperasionalPage() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label>Tanggal</Label>
+                <Label>{t('date')}</Label>
                 <Input 
                   type="date"
                   value={formData.date}
@@ -210,7 +210,7 @@ export default function OperasionalPage() {
         <Card className="shadow-sm border-border bg-card">
           <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
             <div className="flex justify-between items-start">
-              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Gaji</p>
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">{t('salary')}</p>
               <Wallet size={14} className="text-emerald-500" />
             </div>
             <div className="text-sm sm:text-lg font-bold text-foreground truncate">Rp {getCategoryTotal('Gaji').toLocaleString()}</div>
@@ -220,7 +220,7 @@ export default function OperasionalPage() {
         <Card className="shadow-sm border-border bg-card">
           <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
             <div className="flex justify-between items-start">
-              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Reparasi</p>
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">{t('repair')}</p>
               <Hammer size={14} className="text-muted-foreground" />
             </div>
             <div className="text-sm sm:text-lg font-bold text-foreground truncate">Rp {getCategoryTotal('Maintenance').toLocaleString()}</div>
@@ -230,7 +230,7 @@ export default function OperasionalPage() {
         <Card className="shadow-sm border-border bg-foreground text-background col-span-2 lg:col-span-1">
           <CardContent className="p-4 flex flex-row items-center justify-between min-h-[60px]">
             <div>
-              <p className="text-[10px] sm:text-xs font-semibold opacity-70">Total Ops</p>
+              <p className="text-[10px] sm:text-xs font-semibold opacity-70">{t('total_ops')}</p>
               <div className="text-xl sm:text-2xl font-bold tracking-tight">Rp {totalOps.toLocaleString()}</div>
             </div>
             <Receipt size={20} className="opacity-70" />
@@ -245,7 +245,7 @@ export default function OperasionalPage() {
               <TableHeader className="bg-muted/50 border-b">
                 <TableRow className="hover:bg-transparent">
                   <TableHead className="py-4 px-4 font-semibold text-foreground whitespace-nowrap text-[10px]">Info Operasional</TableHead>
-                  <TableHead className="py-4 px-4 font-semibold text-foreground whitespace-nowrap text-right text-[10px]">Jumlah</TableHead>
+                  <TableHead className="py-4 px-4 font-semibold text-foreground whitespace-nowrap text-right text-[10px]">{t('amount')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

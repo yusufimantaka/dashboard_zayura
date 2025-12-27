@@ -28,7 +28,7 @@ import { useData } from "@/context/DataContext";
 import { cn } from "@/lib/utils";
 
 export default function KeuanganPage() {
-  const { transactions, addTransaction } = useData();
+  const { transactions, addTransaction, t } = useData();
   const [activeTab, setActiveTab] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [transactionType, setTransactionType] = useState<"income" | "expense">("income");
@@ -69,21 +69,21 @@ export default function KeuanganPage() {
   };
 
   // Filter transaksi berdasarkan bulan dan tahun terpilih
-  const filteredByDate = transactions.filter(t => {
-    const d = new Date(t.date);
+  const filteredByDate = transactions.filter(tr => {
+    const d = new Date(tr.date);
     return d.getMonth() === selectedMonth && d.getFullYear() === selectedYear;
   });
 
   const totalIncome = filteredByDate
-    .filter(t => t.type === 'income')
+    .filter(tr => tr.type === 'income')
     .reduce((acc, curr) => acc + curr.amount, 0);
   
   const totalExpense = filteredByDate
-    .filter(t => t.type === 'expense')
+    .filter(tr => tr.type === 'expense')
     .reduce((acc, curr) => acc + curr.amount, 0);
 
-  const displayTransactions = filteredByDate.filter(t => 
-    activeTab === "all" ? true : t.type === activeTab
+  const displayTransactions = filteredByDate.filter(tr => 
+    activeTab === "all" ? true : tr.type === activeTab
   ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const openDialog = (type: "income" | "expense") => {
@@ -100,8 +100,8 @@ export default function KeuanganPage() {
     <div className="space-y-6 pb-10">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="space-y-1">
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">Arus Keuangan</h2>
-          <p className="text-xs sm:text-sm text-muted-foreground">Monitoring performa finansial dan likuiditas.</p>
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">{t('finance_title')}</h2>
+          <p className="text-xs sm:text-sm text-muted-foreground">{t('finance_subtitle')}</p>
         </div>
 
         <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-2">
@@ -130,11 +130,11 @@ export default function KeuanganPage() {
           <div className="flex gap-2 w-full sm:w-auto">
             <Button variant="outline" size="sm" className="h-10 px-4 flex-1 text-[10px] sm:text-xs font-semibold shadow-sm" onClick={() => openDialog("expense")}>
               <Plus size={14} className="mr-2 text-rose-500" />
-              Keluar
+              {t('out')}
             </Button>
             <Button size="sm" className="h-10 px-4 flex-1 text-[10px] sm:text-xs font-semibold shadow-sm" onClick={() => openDialog("income")}>
               <Plus size={14} className="mr-2 text-emerald-400" />
-              Masuk
+              {t('in')}
             </Button>
           </div>
         </div>
@@ -143,11 +143,11 @@ export default function KeuanganPage() {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Tambah {transactionType === "income" ? "Pemasukan" : "Pengeluaran"}</DialogTitle>
+            <DialogTitle>Tambah {transactionType === "income" ? t('in') : t('out')}</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label>Kategori</Label>
+              <Label>{t('category')}</Label>
               <Input 
                 placeholder={transactionType === "income" ? "Contoh: Sewa Kamar, Laundry" : "Contoh: Listrik, Air, Kebersihan"}
                 value={formData.category}
@@ -155,7 +155,7 @@ export default function KeuanganPage() {
               />
             </div>
             <div className="grid gap-2">
-              <Label>Jumlah (Rp)</Label>
+              <Label>{t('amount')} (Rp)</Label>
               <Input 
                 type="number" 
                 placeholder="100000"
@@ -164,7 +164,7 @@ export default function KeuanganPage() {
               />
             </div>
             <div className="grid gap-2">
-              <Label>Keterangan</Label>
+              <Label>{t('description')}</Label>
               <Input 
                 placeholder="Deskripsi opsional"
                 value={formData.description}
@@ -172,7 +172,7 @@ export default function KeuanganPage() {
               />
             </div>
             <div className="grid gap-2">
-              <Label>Tanggal</Label>
+              <Label>{t('date')}</Label>
               <Input 
                 type="date"
                 value={formData.date}
@@ -191,7 +191,7 @@ export default function KeuanganPage() {
         <Card className="shadow-sm border-border bg-card">
           <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
             <div className="flex justify-between items-start">
-              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Pemasukan</p>
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">{t('income')}</p>
               <TrendingUp size={14} className="text-emerald-500" />
             </div>
             <div>
@@ -204,7 +204,7 @@ export default function KeuanganPage() {
         <Card className="shadow-sm border-border bg-card">
           <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
             <div className="flex justify-between items-start">
-              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Pengeluaran</p>
+              <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">{t('expense')}</p>
               <TrendingDown size={14} className="text-rose-500" />
             </div>
             <div>
@@ -217,7 +217,7 @@ export default function KeuanganPage() {
         <Card className="shadow-sm border-border bg-foreground text-background col-span-2 lg:col-span-1">
           <CardContent className="p-4 flex flex-row items-center justify-between min-h-[60px]">
             <div>
-              <p className="text-[10px] sm:text-xs font-semibold opacity-70">Saldo Bersih</p>
+              <p className="text-[10px] sm:text-xs font-semibold opacity-70">{t('net_profit')}</p>
               <div className="text-xl sm:text-2xl font-bold tracking-tight">Rp {(totalIncome - totalExpense).toLocaleString()}</div>
             </div>
             <Wallet size={20} className="opacity-70" />
@@ -227,9 +227,9 @@ export default function KeuanganPage() {
 
       <Tabs defaultValue="all" onValueChange={setActiveTab} className="w-full space-y-6">
         <TabsList className="bg-secondary/30 p-1 border border-border/50 h-11 w-full max-w-[400px]">
-          <TabsTrigger value="all" className="flex-1 rounded-md text-[10px] sm:text-xs font-semibold px-4">Semua</TabsTrigger>
-          <TabsTrigger value="income" className="flex-1 rounded-md text-[10px] sm:text-xs font-semibold px-4">Masuk</TabsTrigger>
-          <TabsTrigger value="expense" className="flex-1 rounded-md text-[10px] sm:text-xs font-semibold px-4">Keluar</TabsTrigger>
+          <TabsTrigger value="all" className="flex-1 rounded-md text-[10px] sm:text-xs font-semibold px-4">{t('all')}</TabsTrigger>
+          <TabsTrigger value="income" className="flex-1 rounded-md text-[10px] sm:text-xs font-semibold px-4">{t('in')}</TabsTrigger>
+          <TabsTrigger value="expense" className="flex-1 rounded-md text-[10px] sm:text-xs font-semibold px-4">{t('out')}</TabsTrigger>
         </TabsList>
         <TabsContent value={activeTab} className="mt-0">
           <Card className="shadow-sm border-border overflow-hidden rounded-2xl">
@@ -239,32 +239,32 @@ export default function KeuanganPage() {
                   <TableHeader className="bg-muted/50 border-b">
                     <TableRow className="hover:bg-transparent">
                       <TableHead className="py-4 px-4 font-semibold text-foreground whitespace-nowrap text-[10px]">Info Transaksi</TableHead>
-                      <TableHead className="py-4 px-4 font-semibold text-foreground whitespace-nowrap text-right text-[10px]">Jumlah</TableHead>
+                      <TableHead className="py-4 px-4 font-semibold text-foreground whitespace-nowrap text-right text-[10px]">{t('amount')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {displayTransactions.map((t) => (
-                      <TableRow key={t.id} className="group hover:bg-muted/50 transition-colors border-border">
+                    {displayTransactions.map((tr) => (
+                      <TableRow key={tr.id} className="group hover:bg-muted/50 transition-colors border-border">
                         <TableCell className="py-4 px-4">
                           <div className="flex flex-col gap-1">
                             <div className="flex items-center gap-2">
-                              <Badge variant="outline" className="text-[9px] font-semibold px-1.5 py-0 bg-muted/30 border-border whitespace-nowrap">{t.category}</Badge>
-                              <span className="text-[10px] text-muted-foreground font-medium">{t.date}</span>
+                              <Badge variant="outline" className="text-[9px] font-semibold px-1.5 py-0 bg-muted/30 border-border whitespace-nowrap">{tr.category}</Badge>
+                              <span className="text-[10px] text-muted-foreground font-medium">{tr.date}</span>
                             </div>
-                            <span className="text-xs font-bold text-foreground truncate max-w-[180px] sm:max-w-none italic">"{t.description || "-"}"</span>
+                            <span className="text-xs font-bold text-foreground truncate max-w-[180px] sm:max-w-none italic">"{tr.description || "-"}"</span>
                           </div>
                         </TableCell>
                         <TableCell className="py-4 px-4 text-right whitespace-nowrap">
                           <div className="flex flex-col items-end gap-1">
                             <span className={cn(
                               "font-bold text-sm sm:text-base tracking-tight",
-                              t.type === 'income' ? 'text-emerald-600' : 'text-rose-600'
+                              tr.type === 'income' ? 'text-emerald-600' : 'text-rose-600'
                             )}>
-                              {t.type === 'income' ? '+' : '-'} Rp {t.amount.toLocaleString()}
+                              {tr.type === 'income' ? '+' : '-'} Rp {tr.amount.toLocaleString()}
                             </span>
                             <div className={cn(
                               "w-1.5 h-1.5 rounded-full",
-                              t.type === 'income' ? 'bg-emerald-500' : 'bg-rose-500'
+                              tr.type === 'income' ? 'bg-emerald-500' : 'bg-rose-500'
                             )} />
                           </div>
                         </TableCell>

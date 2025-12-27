@@ -20,21 +20,21 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { useData } from "@/context/DataContext";
 
-const menuItems = [
-  { icon: LayoutDashboard, label: "Dashboard", href: "/" },
-  { icon: DoorClosed, label: "Kamar", href: "/kamar" },
-  { icon: Users, label: "Penghuni", href: "/penghuni" },
-  { icon: Wallet, label: "Keuangan", href: "/keuangan" },
-  { icon: WashingMachine, label: "Laundry", href: "/laundry" },
-  { icon: Receipt, label: "Biaya Ops", href: "/operasional" },
-  { icon: Briefcase, label: "Karyawan", href: "/karyawan" },
-];
-
 export function Sidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
-  const { logout, user } = useData();
+  const { logout, user, t } = useData();
   const [mounted, setMounted] = useState(false);
+
+  const menuItems = [
+    { icon: LayoutDashboard, label: t('dashboard'), href: "/" },
+    { icon: DoorClosed, label: t('rooms'), href: "/kamar" },
+    { icon: Users, label: t('residents'), href: "/penghuni" },
+    { icon: Wallet, label: t('finance'), href: "/keuangan" },
+    { icon: WashingMachine, label: t('laundry'), href: "/laundry" },
+    { icon: Receipt, label: t('operational'), href: "/operasional" },
+    { icon: Briefcase, label: t('employees'), href: "/karyawan" },
+  ];
 
   useEffect(() => {
     setMounted(true);
@@ -48,7 +48,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
     <div className="flex flex-col h-full bg-background text-foreground w-full lg:w-64 lg:fixed lg:left-0 lg:top-0 border-r border-border transition-all duration-300">
       <div className="p-6 pb-2">
         <h1 className="text-3xl font-normal tracking-tight font-zayura text-foreground leading-none">Zayura Exclusive</h1>
-        {user && <p className="text-[10px] text-muted-foreground mt-2 uppercase font-bold tracking-widest">Admin: {user.username}</p>}
+        {user && <p className="text-[10px] text-muted-foreground mt-2 uppercase font-bold tracking-widest">{t('admin')}: {user.username}</p>}
       </div>
       <nav className="flex-1 px-3 py-4 space-y-1">
         {menuItems.map((item) => {
@@ -93,12 +93,24 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
           className="flex items-center gap-3 px-3 py-2 text-rose-500 hover:text-rose-600 w-full transition-colors group text-sm font-medium rounded-md hover:bg-rose-500/10"
         >
           <LogOutIcon size={18} />
-          <span>Keluar Aplikasi</span>
+          <span>{t('logout')}</span>
         </button>
-        <button className="flex items-center gap-3 px-3 py-2 text-muted-foreground hover:text-foreground w-full transition-colors group text-sm font-medium rounded-md hover:bg-secondary/50">
-          <Settings size={18} className="group-hover:rotate-45 transition-transform" />
-          <span>Pengaturan</span>
-        </button>
+        <Link 
+          href="/settings"
+          onClick={handleLinkClick}
+          className={cn(
+            "flex items-center gap-3 px-3 py-2 w-full transition-colors group text-sm font-medium rounded-md",
+            pathname === "/settings" 
+              ? "bg-secondary text-secondary-foreground" 
+              : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground"
+          )}
+        >
+          <Settings size={18} className={cn(
+            "transition-transform",
+            pathname === "/settings" ? "rotate-0" : "group-hover:rotate-45"
+          )} />
+          <span>{t('settings')}</span>
+        </Link>
       </div>
     </div>
   );
