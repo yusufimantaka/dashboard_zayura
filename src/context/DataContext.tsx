@@ -135,23 +135,34 @@ export function DataProvider({ children }: { children: ReactNode }) {
         supabase.from('residents').select('*').order('full_name'),
         supabase.from('tenancies').select('*'),
         supabase.from('invoices').select('*').order('due_date'),
-        supabase.from('transactions').select('*').order('transaction_date', { ascending: false }),
+        supabase.from('transactions').select('*').order('created_at', { ascending: false }),
         supabase.from('laundry').select('*').order('date', { ascending: false }),
         supabase.from('employees').select('*').order('name')
       ]);
 
-      if (roomsData) setRooms(roomsData);
-      if (residentsData) setResidents(residentsData);
-      if (tenanciesData) setTenancies(tenanciesData);
-      if (invoicesData) setInvoices(invoicesData);
-      if (transactionsData) {
-        setTransactions(transactionsData.map(t => ({
-          ...t,
-          date: t.transaction_date // Map database column to interface field
-        })));
+      if (roomsData && tenanciesData) {
+        // Logika Auto-Sync: Pastikan status kamar sesuai dengan data penghuni aktif
+        const activeTenancies = tenanciesData.filter(t => t.status === 'active');
+        const syncedRooms = roomsData.map(room => {
+          const isOccupied = activeTenancies.some(t => t.room_id === room.id);
+          return {
+            ...room,
+            status: isOccupied ? 'occupied' : (room.status === 'occupied' ? 'available' : room.status)
+          } as Room;
+        });
+        setRooms(syncedRooms);
+        setResidents(residentsData || []);
+        setTenancies(tenanciesData);
+        setInvoices(invoicesData || []);
+        if (transactionsData) {
+          setTransactions(transactionsData.map(t => ({
+            ...t,
+            date: t.transaction_date 
+          })));
+        }
+        setLaundry(laundryData || []);
+        setEmployees(employeesData || []);
       }
-      if (laundryData) setLaundry(laundryData);
-      if (employeesData) setEmployees(employeesData);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
