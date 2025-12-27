@@ -20,7 +20,7 @@ export const cardContainerVariants = {
       staggerChildren: 0.1,
     },
   },
-};
+} as const;
 
 export const cardItemVariants = {
   hidden: { opacity: 0, y: 30 },
@@ -33,7 +33,7 @@ export const cardItemVariants = {
       damping: 25
     }
   },
-};
+} as const;
 
 export function AnimatedCard({ children, className, enableTilt = true, noBackground = false, ...props }: AnimatedCardProps) {
   const x = useMotionValue(0);
