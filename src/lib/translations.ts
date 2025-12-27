@@ -222,3 +222,4 @@ export const translations = {
 export type Language = 'id' | 'en';
 export type TranslationKey = keyof typeof translations.id;
 
+

@@ -96,9 +96,10 @@
 
 /* Luxury Color Palettes */
 .theme-gold {
-  --primary: oklch(0.75 0.15 80);
-  --primary-foreground: oklch(0.1 0.02 80);
-  --ring: oklch(0.75 0.15 80);
+  --primary: oklch(0.81 0.19 80); /* #FFBF00 Amber/Gold */
+  --primary-foreground: oklch(0.15 0.05 80); /* Dark gold/amber text */
+  --ring: oklch(0.81 0.19 80);
+  --gold-gradient: linear-gradient(135deg, #FFBF00 0%, #FFE9A8 100%);
 }
 
 .theme-emerald {
@@ -114,6 +115,26 @@
 }
 
 @layer utilities {
+  .bg-gold-gradient {
+    background: var(--gold-gradient, linear-gradient(135deg, #FFBF00 0%, #FFE9A8 100%));
+  }
+  .text-gold-gradient {
+    background: var(--gold-gradient, linear-gradient(135deg, #FFBF00 0%, #FFE9A8 100%));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    display: inline-block;
+  }
+  .bg-rose-pattern {
+    background-color: var(--background);
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 50c0-15 10-25 25-25s25 10 25 25-10 25-25 25-25-10-25-25zm-50 0c0-15 10-25 25-25s25 10 25 25-10 25-25 25-25-10-25-25zm25-25c0-15 10-25 25-25s25 10 25 25-10 25-25 25-25-10-25-25zm0 50c0-15 10-25 25-25s25 10 25 25-10 25-25 25-25-10-25-25z' fill='%23000000' fill-opacity='0.02'/%3E%3C/svg%3E");
+    background-attachment: fixed;
+  }
+  .dark .bg-rose-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 50c0-15 10-25 25-25s25 10 25 25-10 25-25 25-25-10-25-25zm-50 0c0-15 10-25 25-25s25 10 25 25-10 25-25 25-25-10-25-25zm25-25c0-15 10-25 25-25s25 10 25 25-10 25-25 25-25-10-25-25zm0 50c0-15 10-25 25-25s25 10 25 25-10 25-25 25-25-10-25-25z' fill='%23ffffff' fill-opacity='0.015'/%3E%3C/svg%3E");
+    background-attachment: fixed;
+  }
   .pb-safe {
     padding-bottom: env(safe-area-inset-bottom);
   }
@@ -128,6 +149,9 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
   }
   body {
     @apply bg-background text-foreground font-sans antialiased transition-colors duration-300;

@@ -19,6 +19,10 @@ export const metadata: Metadata = {
   title: "Zayura Exclusive - Management System",
   description: "Luxury Boarding House Management Dashboard",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",

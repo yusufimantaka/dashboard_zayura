@@ -33,9 +33,12 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useData } from "@/context/DataContext";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
+import { AnimatedCard, cardContainerVariants } from "@/components/AnimatedCard";
+import { CountUp } from "@/components/CountUp";
 
 export default function PenghuniPage() {
-  const { residents, tenancies, rooms, invoices, transactions, addResident, addTenancy, updateRoomStatus, addInvoice, payInvoice, checkoutResident, deleteTenancy, extendTenancy, refreshData, t } = useData();
+  const { residents, tenancies, rooms, invoices, transactions, addResident, addTenancy, updateRoomStatus, addInvoice, payInvoice, checkoutResident, deleteTenancy, extendTenancy, refreshData, t, themeColor } = useData();
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("active");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -331,33 +334,42 @@ export default function PenghuniPage() {
         </Dialog>
       </div>
 
-      <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
-        <Card className="shadow-sm border-border bg-card">
-          <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
+      <motion.div 
+        variants={cardContainerVariants}
+        initial="hidden"
+        animate="show"
+        className="grid gap-3 grid-cols-2 lg:grid-cols-4"
+      >
+        <AnimatedCard>
+          <div className="p-4 flex flex-col justify-between min-h-[80px]">
             <div className="flex justify-between items-start">
               <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">{t('active')}</p>
               <Users size={14} className="text-emerald-500" />
             </div>
             <div>
-              <div className="text-xl sm:text-2xl font-bold tracking-tight">{activeResidents.length}</div>
+              <div className="text-xl sm:text-2xl font-bold tracking-tight">
+                <CountUp value={activeResidents.length} />
+              </div>
               <p className="text-[9px] text-muted-foreground font-medium">Residents</p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </AnimatedCard>
 
-        <Card className="shadow-sm border-border bg-card">
-          <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
+        <AnimatedCard>
+          <div className="p-4 flex flex-col justify-between min-h-[80px]">
             <div className="flex justify-between items-start">
               <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">{t('history')}</p>
               <History size={14} className="text-muted-foreground" />
             </div>
             <div>
-              <div className="text-xl sm:text-2xl font-bold tracking-tight">{historyResidents.length}</div>
+              <div className="text-xl sm:text-2xl font-bold tracking-tight">
+                <CountUp value={historyResidents.length} />
+              </div>
               <p className="text-[9px] text-muted-foreground font-medium">Ex-Residents</p>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </AnimatedCard>
+      </motion.div>
 
       <Tabs defaultValue="active" onValueChange={setActiveTab} className="space-y-6">
         <div className="flex flex-col gap-4">
@@ -388,7 +400,12 @@ export default function PenghuniPage() {
                       <TableRow key={item.id} className="group hover:bg-muted/50 transition-colors border-border">
                         <TableCell className="py-4 px-4 whitespace-nowrap">
                           <div className="flex flex-col">
-                            <span className="font-bold text-foreground text-sm sm:text-base">{item.resident_name}</span>
+                            <span className={cn(
+                              "font-bold text-sm sm:text-base transition-all duration-300",
+                              themeColor === 'gold' ? "text-gold-gradient" : "text-foreground"
+                            )}>
+                              {item.resident_name}
+                            </span>
                             <div className="flex items-center gap-2 mt-0.5">
                               <span className="text-xs font-bold text-muted-foreground">{t('rooms')} {item.room_number}</span>
                               <span className="text-[10px] font-semibold text-muted-foreground bg-secondary px-1.5 py-0 rounded uppercase tracking-tighter">L{item.floor}</span>

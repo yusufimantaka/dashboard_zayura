@@ -24,7 +24,7 @@ export default function SettingsPage() {
 
   const themes = [
     { id: 'default', name: 'Zayura Noir', color: 'bg-slate-900' },
-    { id: 'gold', name: 'Luxury Gold', color: 'bg-[#d4af37]' },
+    { id: 'gold', name: 'Luxury Gold', color: 'bg-gold-gradient' },
     { id: 'emerald', name: 'Royal Emerald', color: 'bg-[#046307]' },
     { id: 'rose', name: 'Elegant Rose', color: 'bg-[#880808]' },
   ];

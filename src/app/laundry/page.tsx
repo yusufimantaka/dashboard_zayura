@@ -31,9 +31,13 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { useData } from "@/context/DataContext";
+import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
+import { AnimatedCard, cardContainerVariants } from "@/components/AnimatedCard";
+import { CountUp } from "@/components/CountUp";
 
 export default function LaundryPage() {
-  const { laundry, residents, addLaundry, updateLaundryStatus, addTransaction, t } = useData();
+  const { laundry, residents, addLaundry, updateLaundryStatus, addTransaction, t, themeColor } = useData();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   
   const [formData, setFormData] = useState({
@@ -133,41 +137,58 @@ export default function LaundryPage() {
         </Dialog>
       </div>
 
-      <div className="grid gap-3 grid-cols-2 lg:grid-cols-3">
-        <Card className="shadow-sm border-border bg-card">
+      <motion.div 
+        variants={cardContainerVariants}
+        initial="hidden"
+        animate="show"
+        className="grid gap-3 grid-cols-2 lg:grid-cols-3"
+      >
+        <AnimatedCard>
           <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
             <div className="flex justify-between items-start">
               <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">{t('process')}</p>
               <Clock size={14} className="text-amber-500" />
             </div>
             <div>
-              <div className="text-lg sm:text-2xl font-bold text-foreground">{laundry.filter(l => l.status === 'process').length}</div>
+              <div className="text-lg sm:text-2xl font-bold text-foreground">
+                <CountUp value={laundry.filter(l => l.status === 'process').length} />
+              </div>
               <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5">{t('ongoing')}</p>
             </div>
           </CardContent>
-        </Card>
-        <Card className="shadow-sm border-border bg-card">
+        </AnimatedCard>
+        
+        <AnimatedCard>
           <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
             <div className="flex justify-between items-start">
               <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">{t('done')}</p>
               <CheckCircle2 size={14} className="text-emerald-500" />
             </div>
             <div>
-              <div className="text-lg sm:text-2xl font-bold text-foreground">{laundry.filter(l => l.status === 'done').length}</div>
+              <div className="text-lg sm:text-2xl font-bold text-foreground">
+                <CountUp value={laundry.filter(l => l.status === 'done').length} />
+              </div>
               <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5">{t('ready')}</p>
             </div>
           </CardContent>
-        </Card>
-        <Card className="shadow-sm border-border bg-foreground text-background col-span-2 lg:col-span-1">
-          <CardContent className="p-4 flex flex-row items-center justify-between min-h-[60px]">
+        </AnimatedCard>
+
+        <AnimatedCard className="col-span-2 lg:col-span-1" noBackground>
+          <div className={cn(
+            "p-4 flex flex-row items-center justify-between min-h-[60px] h-full transition-all duration-500",
+            themeColor === 'gold' ? "bg-gold-gradient text-slate-950 font-bold" : "bg-primary text-primary-foreground"
+          )}>
             <div>
               <p className="text-[10px] sm:text-xs font-semibold opacity-70">Revenue</p>
-              <div className="text-xl sm:text-2xl font-bold tracking-tight">Rp {laundry.reduce((acc, curr) => acc + curr.price, 0).toLocaleString()}</div>
+              <div className="text-xl sm:text-2xl font-bold tracking-tight">
+                <span>Rp </span>
+                <CountUp value={laundry.reduce((acc, curr) => acc + curr.price, 0)} />
+              </div>
             </div>
             <WashingMachine size={20} className="opacity-70" />
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </AnimatedCard>
+      </motion.div>
 
       <Card className="shadow-sm border-border overflow-hidden rounded-xl">
         <CardContent className="p-0">

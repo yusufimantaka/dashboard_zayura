@@ -32,9 +32,12 @@ import {
 } from "@/components/ui/select";
 import { useData } from "@/context/DataContext";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
+import { AnimatedCard, cardContainerVariants } from "@/components/AnimatedCard";
+import { CountUp } from "@/components/CountUp";
 
 export default function KamarPage() {
-  const { rooms, addRoom, residents, tenancies, t } = useData();
+  const { rooms, addRoom, residents, tenancies, t, themeColor } = useData();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [filterFloor, setFilterFloor] = useState<string>("all");
   
@@ -169,65 +172,75 @@ export default function KamarPage() {
         </div>
       </div>
 
-      <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
-        <Card className="shadow-sm border-border bg-foreground text-background">
-          <CardContent className="p-4 sm:p-6 flex flex-col justify-between h-full min-h-[100px]">
+      <motion.div 
+        variants={cardContainerVariants}
+        initial="hidden"
+        animate="show"
+        className="grid gap-3 grid-cols-2 lg:grid-cols-4"
+      >
+        <AnimatedCard className="h-full" noBackground>
+          <div className={cn(
+            "p-4 sm:p-6 flex flex-col justify-between h-full min-h-[100px] transition-all duration-500",
+            themeColor === 'gold' ? "bg-gold-gradient text-slate-950 font-bold" : "bg-primary text-primary-foreground"
+          )}>
             <div className="flex justify-between items-start">
               <p className="text-[10px] sm:text-xs font-semibold opacity-70">Inventory</p>
               <DoorClosed className="h-4 w-4 opacity-70" />
             </div>
             <div>
-              <div className="text-2xl sm:text-3xl font-bold tracking-tight">{rooms.length}</div>
+              <div className="text-2xl sm:text-3xl font-bold tracking-tight">
+                <CountUp value={rooms.length} />
+              </div>
               <p className="text-[9px] sm:text-[10px] opacity-50 font-medium mt-0.5">Unit Total</p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </AnimatedCard>
         
-        <Card className="shadow-sm border-border bg-card">
-          <CardContent className="p-4 sm:p-6 flex flex-col justify-between h-full min-h-[100px]">
+        <AnimatedCard>
+          <div className="p-4 sm:p-6 flex flex-col justify-between h-full min-h-[100px]">
             <div className="flex justify-between items-start">
               <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">{t('occupied')}</p>
               <div className="h-2 w-2 rounded-full bg-rose-500 mt-1" />
             </div>
             <div>
               <div className="text-2xl sm:text-3xl font-bold tracking-tight">
-                {rooms.filter(r => r.status === 'occupied').length}
+                <CountUp value={rooms.filter(r => r.status === 'occupied').length} />
               </div>
               <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5">Occupied</p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </AnimatedCard>
 
-        <Card className="shadow-sm border-border bg-card">
-          <CardContent className="p-4 sm:p-6 flex flex-col justify-between h-full min-h-[100px]">
+        <AnimatedCard>
+          <div className="p-4 sm:p-6 flex flex-col justify-between h-full min-h-[100px]">
             <div className="flex justify-between items-start">
               <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">{t('ready')}</p>
               <div className="h-2 w-2 rounded-full bg-emerald-500 mt-1" />
             </div>
             <div>
               <div className="text-2xl sm:text-3xl font-bold tracking-tight">
-                {rooms.filter(r => r.status === 'available').length}
+                <CountUp value={rooms.filter(r => r.status === 'available').length} />
               </div>
               <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5">Available</p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </AnimatedCard>
 
-        <Card className="shadow-sm border-border bg-card">
-          <CardContent className="p-4 sm:p-6 flex flex-col justify-between h-full min-h-[100px]">
+        <AnimatedCard>
+          <div className="p-4 sm:p-6 flex flex-col justify-between h-full min-h-[100px]">
             <div className="flex justify-between items-start">
               <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">{t('repair')}</p>
               <div className="h-2 w-2 rounded-full bg-amber-500 mt-1" />
             </div>
             <div>
               <div className="text-2xl sm:text-3xl font-bold tracking-tight">
-                {rooms.filter(r => r.status === 'maintenance').length}
+                <CountUp value={rooms.filter(r => r.status === 'maintenance').length} />
               </div>
               <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5">Maintenance</p>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </AnimatedCard>
+      </motion.div>
 
       <Card className="border-border shadow-sm bg-card overflow-hidden rounded-2xl">
         <CardContent className="p-0">
@@ -246,7 +259,12 @@ export default function KamarPage() {
                   <TableRow key={room.id} className="group hover:bg-muted/50 transition-colors border-border">
                     <TableCell className="py-5 px-6 whitespace-nowrap">
                       <div className="flex flex-col">
-                        <span className="font-bold text-foreground text-base sm:text-lg">{t('rooms')} {room.room_number}</span>
+                        <span className={cn(
+                          "font-bold text-base sm:text-lg transition-all duration-300",
+                          themeColor === 'gold' ? "text-gold-gradient" : "text-foreground"
+                        )}>
+                          {t('rooms')} {room.room_number}
+                        </span>
                         <div className="flex items-center gap-2 mt-0.5">
                           <Badge variant="outline" className="text-[9px] font-semibold px-1.5 py-0 bg-muted/50 border-border uppercase tracking-tighter">{room.type}</Badge>
                           <span className="text-[10px] font-semibold text-muted-foreground sm:hidden">L{room.floor}</span>

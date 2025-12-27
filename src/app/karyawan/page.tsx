@@ -24,6 +24,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useData } from "@/context/DataContext";
+import { motion, AnimatePresence } from "framer-motion";
+import { AnimatedCard, cardContainerVariants } from "@/components/AnimatedCard";
+import { CountUp } from "@/components/CountUp";
+import { cn } from "@/lib/utils";
 
 export default function KaryawanPage() {
   const { employees, addEmployee, transactions, addTransaction, t } = useData();
@@ -150,48 +154,57 @@ export default function KaryawanPage() {
         </Dialog>
       </div>
 
-      <div className="grid gap-3 grid-cols-2 lg:grid-cols-3">
-        <Card className="shadow-sm border-border bg-card">
-          <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
+      <motion.div 
+        variants={cardContainerVariants}
+        initial="hidden"
+        animate="show"
+        className="grid gap-3 grid-cols-2 lg:grid-cols-3"
+      >
+        <AnimatedCard>
+          <div className="p-4 flex flex-col justify-between min-h-[80px]">
             <div className="flex justify-between items-start">
               <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">{t('total_staff')}</p>
               <User size={14} className="text-muted-foreground" />
             </div>
             <div>
-              <div className="text-lg sm:text-2xl font-bold tracking-tight text-foreground">{employees.length}</div>
+              <div className="text-lg sm:text-2xl font-bold tracking-tight text-foreground">
+                <CountUp value={employees.length} />
+              </div>
               <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5">{t('active')}</p>
             </div>
-          </CardContent>
-        </Card>
-        <Card className="shadow-sm border-border bg-card">
-          <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
+          </div>
+        </AnimatedCard>
+        
+        <AnimatedCard>
+          <div className="p-4 flex flex-col justify-between min-h-[80px]">
             <div className="flex justify-between items-start">
               <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">{t('salary_paid')}</p>
               <CheckCircle2 size={14} className="text-emerald-500" />
             </div>
             <div>
-              <div className="text-lg sm:text-2xl font-bold tracking-tight text-emerald-600">
-                {employees.filter(e => isSalaryPaid(e.name)).length}
+              <div className="text-lg sm:text-2xl font-bold text-emerald-600">
+                <CountUp value={employees.filter(e => isSalaryPaid(e.name)).length} />
               </div>
               <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5">Bulan Ini</p>
             </div>
-          </CardContent>
-        </Card>
-        <Card className="shadow-sm border-border bg-card col-span-2 lg:col-span-1">
-          <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
+          </div>
+        </AnimatedCard>
+
+        <AnimatedCard className="col-span-2 lg:col-span-1">
+          <div className="p-4 flex flex-col justify-between min-h-[80px]">
             <div className="flex justify-between items-start">
               <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">{t('outstanding')}</p>
               <Clock size={14} className="text-rose-500" />
             </div>
             <div>
-              <div className="text-lg sm:text-2xl font-bold tracking-tight text-rose-600">
-                {employees.filter(e => !isSalaryPaid(e.name)).length}
+              <div className="text-lg sm:text-2xl font-bold text-rose-600">
+                <CountUp value={employees.filter(e => !isSalaryPaid(e.name)).length} />
               </div>
               <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5">Belum Bayar</p>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </AnimatedCard>
+      </motion.div>
 
       <Card className="shadow-sm border-border overflow-hidden rounded-xl">
         <CardContent className="p-0">

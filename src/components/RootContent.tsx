@@ -39,10 +39,10 @@ export function RootContent({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex min-h-screen bg-background text-foreground transition-colors duration-300 antialiased overflow-x-hidden">
+    <div className="flex min-h-screen bg-background text-foreground transition-colors duration-300 antialiased overflow-x-hidden bg-rose-pattern">
       {/* Mobile Header */}
       <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-background/80 backdrop-blur-md border-b border-border z-40 flex items-center justify-between px-6">
-        <h1 className="text-xl font-normal font-zayura tracking-tight">Zayura Exclusive</h1>
+        <img src="/logo.png" alt="Zayura Logo" className="h-8 w-auto object-contain" />
         <Button 
           variant="ghost" 
           size="icon" 
@@ -84,7 +84,17 @@ export function RootContent({ children }: { children: React.ReactNode }) {
 
       <main className="flex-1 lg:ml-64 p-4 md:p-8 pt-20 lg:pt-10 transition-all duration-300">
         <div className="max-w-6xl mx-auto">
-          {children}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={typeof window !== 'undefined' ? window.location.pathname : 'server'}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+            >
+              {children}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </main>
     </div>

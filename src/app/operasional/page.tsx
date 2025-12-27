@@ -31,9 +31,13 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { useData } from "@/context/DataContext";
+import { motion, AnimatePresence } from "framer-motion";
+import { AnimatedCard, cardContainerVariants } from "@/components/AnimatedCard";
+import { CountUp } from "@/components/CountUp";
+import { cn } from "@/lib/utils";
 
 export default function OperasionalPage() {
-  const { transactions, addTransaction, t } = useData();
+  const { transactions, addTransaction, t, themeColor } = useData();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   
   // State untuk filter bulan dan tahun
@@ -186,57 +190,76 @@ export default function OperasionalPage() {
         </div>
       </div>
 
-      <div className="grid gap-3 grid-cols-2 lg:grid-cols-5">
-        <Card className="shadow-sm border-border bg-card">
+      <motion.div 
+        variants={cardContainerVariants}
+        initial="hidden"
+        animate="show"
+        className="grid gap-3 grid-cols-2 lg:grid-cols-5"
+      >
+        <AnimatedCard>
           <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
             <div className="flex justify-between items-start">
               <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Listrik</p>
               <Zap size={14} className="text-amber-500" />
             </div>
-            <div className="text-sm sm:text-lg font-bold text-foreground truncate">Rp {getCategoryTotal('Listrik').toLocaleString()}</div>
+            <div className="text-sm sm:text-lg font-bold text-foreground truncate">
+              <CountUp value={getCategoryTotal('Listrik')} formatter={(v) => `Rp ${Math.floor(v).toLocaleString()}`} />
+            </div>
           </CardContent>
-        </Card>
+        </AnimatedCard>
 
-        <Card className="shadow-sm border-border bg-card">
+        <AnimatedCard>
           <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
             <div className="flex justify-between items-start">
               <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Air</p>
               <Droplets size={14} className="text-blue-500" />
             </div>
-            <div className="text-sm sm:text-lg font-bold text-foreground truncate">Rp {getCategoryTotal('Air').toLocaleString()}</div>
+            <div className="text-sm sm:text-lg font-bold text-foreground truncate">
+              <CountUp value={getCategoryTotal('Air')} formatter={(v) => `Rp ${Math.floor(v).toLocaleString()}`} />
+            </div>
           </CardContent>
-        </Card>
+        </AnimatedCard>
 
-        <Card className="shadow-sm border-border bg-card">
+        <AnimatedCard>
           <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
             <div className="flex justify-between items-start">
               <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">{t('salary')}</p>
               <Wallet size={14} className="text-emerald-500" />
             </div>
-            <div className="text-sm sm:text-lg font-bold text-foreground truncate">Rp {getCategoryTotal('Gaji').toLocaleString()}</div>
+            <div className="text-sm sm:text-lg font-bold text-foreground truncate">
+              <CountUp value={getCategoryTotal('Gaji')} formatter={(v) => `Rp ${Math.floor(v).toLocaleString()}`} />
+            </div>
           </CardContent>
-        </Card>
+        </AnimatedCard>
 
-        <Card className="shadow-sm border-border bg-card">
+        <AnimatedCard>
           <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
             <div className="flex justify-between items-start">
               <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">{t('repair')}</p>
               <Hammer size={14} className="text-muted-foreground" />
             </div>
-            <div className="text-sm sm:text-lg font-bold text-foreground truncate">Rp {getCategoryTotal('Maintenance').toLocaleString()}</div>
+            <div className="text-sm sm:text-lg font-bold text-foreground truncate">
+              <CountUp value={getCategoryTotal('Maintenance')} formatter={(v) => `Rp ${Math.floor(v).toLocaleString()}`} />
+            </div>
           </CardContent>
-        </Card>
+        </AnimatedCard>
 
-        <Card className="shadow-sm border-border bg-foreground text-background col-span-2 lg:col-span-1">
-          <CardContent className="p-4 flex flex-row items-center justify-between min-h-[60px]">
+        <AnimatedCard className="col-span-2 lg:col-span-1" noBackground>
+          <div className={cn(
+            "p-4 flex flex-row items-center justify-between min-h-[60px] h-full transition-all duration-500",
+            themeColor === 'gold' ? "bg-gold-gradient text-slate-950 font-bold" : "bg-primary text-primary-foreground"
+          )}>
             <div>
               <p className="text-[10px] sm:text-xs font-semibold opacity-70">{t('total_ops')}</p>
-              <div className="text-xl sm:text-2xl font-bold tracking-tight">Rp {totalOps.toLocaleString()}</div>
+              <div className="text-xl sm:text-2xl font-bold tracking-tight">
+                <span>Rp </span>
+                <CountUp value={totalOps} />
+              </div>
             </div>
             <Receipt size={20} className="opacity-70" />
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </AnimatedCard>
+      </motion.div>
 
       <Card className="shadow-sm border-border overflow-hidden rounded-2xl">
         <CardContent className="p-0">

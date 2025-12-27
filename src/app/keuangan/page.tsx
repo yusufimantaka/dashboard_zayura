@@ -26,9 +26,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useData } from "@/context/DataContext";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
+import { AnimatedCard, cardContainerVariants } from "@/components/AnimatedCard";
+import { CountUp } from "@/components/CountUp";
 
 export default function KeuanganPage() {
-  const { transactions, addTransaction, t } = useData();
+  const { transactions, addTransaction, t, themeColor } = useData();
   const [activeTab, setActiveTab] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [transactionType, setTransactionType] = useState<"income" | "expense">("income");
@@ -187,43 +190,60 @@ export default function KeuanganPage() {
         </DialogContent>
       </Dialog>
 
-      <div className="grid gap-3 grid-cols-2 lg:grid-cols-3">
-        <Card className="shadow-sm border-border bg-card">
+      <motion.div 
+        variants={cardContainerVariants}
+        initial="hidden"
+        animate="show"
+        className="grid gap-3 grid-cols-2 lg:grid-cols-3"
+      >
+        <AnimatedCard>
           <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
             <div className="flex justify-between items-start">
               <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">{t('income')}</p>
               <TrendingUp size={14} className="text-emerald-500" />
             </div>
             <div>
-              <div className="text-lg sm:text-2xl font-bold tracking-tight text-emerald-600">Rp {totalIncome.toLocaleString()}</div>
+              <div className="text-lg sm:text-2xl font-bold tracking-tight text-emerald-600">
+                <span>Rp </span>
+                <CountUp value={totalIncome} />
+              </div>
               <p className="text-[9px] text-muted-foreground font-medium">{months[selectedMonth]}</p>
             </div>
           </CardContent>
-        </Card>
+        </AnimatedCard>
 
-        <Card className="shadow-sm border-border bg-card">
+        <AnimatedCard>
           <CardContent className="p-4 flex flex-col justify-between min-h-[80px]">
             <div className="flex justify-between items-start">
               <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground">{t('expense')}</p>
               <TrendingDown size={14} className="text-rose-500" />
             </div>
             <div>
-              <div className="text-lg sm:text-2xl font-bold tracking-tight text-rose-600">Rp {totalExpense.toLocaleString()}</div>
+              <div className="text-lg sm:text-2xl font-bold tracking-tight text-rose-600">
+                <span>Rp </span>
+                <CountUp value={totalExpense} />
+              </div>
               <p className="text-[9px] text-muted-foreground font-medium">{months[selectedMonth]}</p>
             </div>
           </CardContent>
-        </Card>
+        </AnimatedCard>
 
-        <Card className="shadow-sm border-border bg-foreground text-background col-span-2 lg:col-span-1">
-          <CardContent className="p-4 flex flex-row items-center justify-between min-h-[60px]">
+        <AnimatedCard className="col-span-2 lg:col-span-1" noBackground>
+          <div className={cn(
+            "p-4 flex flex-row items-center justify-between min-h-[60px] h-full transition-all duration-500",
+            themeColor === 'gold' ? "bg-gold-gradient text-slate-950 font-bold" : "bg-primary text-primary-foreground"
+          )}>
             <div>
               <p className="text-[10px] sm:text-xs font-semibold opacity-70">{t('net_profit')}</p>
-              <div className="text-xl sm:text-2xl font-bold tracking-tight">Rp {(totalIncome - totalExpense).toLocaleString()}</div>
+              <div className="text-xl sm:text-2xl font-bold tracking-tight">
+                <span>Rp </span>
+                <CountUp value={totalIncome - totalExpense} />
+              </div>
             </div>
             <Wallet size={20} className="opacity-70" />
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </AnimatedCard>
+      </motion.div>
 
       <Tabs defaultValue="all" onValueChange={setActiveTab} className="w-full space-y-6">
         <TabsList className="bg-secondary/30 p-1 border border-border/50 h-11 w-full max-w-[400px]">
