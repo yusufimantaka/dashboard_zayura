@@ -46,61 +46,59 @@ export default function DashboardPage() {
   const nettMoney = totalAllTimeIncome - totalAllTimeExpense;
 
   return (
-    <div className="space-y-8">
-      <div className="flex justify-between items-center">
+    <div className="space-y-6 pb-10">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="space-y-1">
-          <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-          <p className="text-sm text-muted-foreground">Overview performa bisnis Zayura Exclusive.</p>
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">Dashboard</h2>
+          <p className="text-xs sm:text-sm text-muted-foreground">Overview performa bisnis Zayura Exclusive.</p>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="bg-secondary text-secondary-foreground px-3 py-1.5 rounded-md text-xs font-medium border border-border">
-            Total Kas: Rp {nettMoney.toLocaleString()}
-          </div>
+        <div className="bg-secondary text-secondary-foreground px-3 py-1.5 rounded-md text-[10px] sm:text-xs font-semibold border border-border w-full sm:w-auto text-center sm:text-left">
+          Total Kas: Rp {nettMoney.toLocaleString()}
         </div>
       </div>
 
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
         <Card className="shadow-sm border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Saldo Kas</CardTitle>
-            <Wallet className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
+            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Saldo Kas</CardTitle>
+            <Wallet className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold tracking-tight">Rp {nettMoney.toLocaleString()}</div>
-            <p className="text-[10px] text-muted-foreground mt-1 font-medium italic">Likuiditas tersedia</p>
+          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
+            <div className="text-base sm:text-2xl font-bold tracking-tight">Rp {nettMoney.toLocaleString()}</div>
+            <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5 font-medium italic">Likuiditas</p>
           </CardContent>
         </Card>
         
         <Card className="shadow-sm border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Nett Money</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
+            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Nett Money</CardTitle>
+            <TrendingUp className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold tracking-tight">Rp {nettMoney.toLocaleString()}</div>
-            <p className="text-[10px] text-muted-foreground mt-1 font-medium italic">Akumulasi laba bersih</p>
+          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
+            <div className="text-base sm:text-2xl font-bold tracking-tight">Rp {nettMoney.toLocaleString()}</div>
+            <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5 font-medium italic">Laba Bersih</p>
           </CardContent>
         </Card>
 
         <Card className="shadow-sm border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Unit Tersedia</CardTitle>
-            <DoorOpen className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
+            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Tersedia</CardTitle>
+            <DoorOpen className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold tracking-tight">{availableRooms} / {rooms.length}</div>
-            <p className="text-[10px] text-muted-foreground mt-1 font-medium italic">Kesiapan hunian</p>
+          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
+            <div className="text-base sm:text-2xl font-bold tracking-tight">{availableRooms} <span className="text-[10px] sm:text-sm font-normal text-muted-foreground">Unit</span></div>
+            <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5 font-medium italic">Kesiapan</p>
           </CardContent>
         </Card>
 
         <Card className="shadow-sm border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Laundry Proses</CardTitle>
-            <WashingMachine className="h-4 w-4 text-muted-foreground" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
+            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Laundry</CardTitle>
+            <WashingMachine className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold tracking-tight">{activeLaundry}</div>
-            <p className="text-[10px] text-muted-foreground mt-1 font-medium italic">Pesanan ongoing</p>
+          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
+            <div className="text-base sm:text-2xl font-bold tracking-tight">{activeLaundry} <span className="text-[10px] sm:text-sm font-normal text-muted-foreground">Order</span></div>
+            <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5 font-medium italic">Ongoing</p>
           </CardContent>
         </Card>
       </div>

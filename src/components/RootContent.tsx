@@ -41,15 +41,15 @@ export function RootContent({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen bg-background text-foreground transition-colors duration-300 antialiased overflow-x-hidden">
       {/* Mobile Header */}
-      <header className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-background/80 backdrop-blur-md border-b border-border z-40 flex items-center justify-between px-4">
-        <h1 className="text-xl font-normal font-zayura">Zayura Exclusive</h1>
+      <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-background/80 backdrop-blur-md border-b border-border z-40 flex items-center justify-between px-6">
+        <h1 className="text-xl font-normal font-zayura tracking-tight">Zayura Exclusive</h1>
         <Button 
           variant="ghost" 
           size="icon" 
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="relative z-50"
+          className="relative z-50 -mr-2"
         >
-          {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+          {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
         </Button>
       </header>
 

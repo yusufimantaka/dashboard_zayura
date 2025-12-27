@@ -97,18 +97,18 @@ export default function KeuanganPage() {
   ];
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div className="space-y-6 pb-10">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="space-y-1">
-          <h2 className="text-3xl font-bold tracking-tight text-foreground">Arus Keuangan</h2>
-          <p className="text-sm text-muted-foreground">Monitoring performa finansial dan likuiditas.</p>
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">Arus Keuangan</h2>
+          <p className="text-xs sm:text-sm text-muted-foreground">Monitoring performa finansial dan likuiditas.</p>
         </div>
 
-        <div className="flex flex-col sm:flex-row w-full md:w-auto gap-3">
-          <div className="flex items-center gap-2 bg-secondary/50 border border-border rounded-md px-3 h-10 shadow-sm flex-1 sm:flex-none">
-            <CalendarIcon size={16} className="text-muted-foreground" />
+        <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-2">
+          <div className="flex items-center gap-2 bg-secondary/50 border border-border rounded-md px-3 h-12 sm:h-10 shadow-sm flex-1 sm:flex-none">
+            <CalendarIcon size={18} className="text-muted-foreground" />
             <select 
-              className="text-xs font-bold border-none focus:ring-0 outline-none bg-transparent text-foreground flex-1"
+              className="text-sm sm:text-sm font-semibold border-none focus:ring-0 outline-none bg-transparent text-foreground flex-1 cursor-pointer py-2"
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
             >
@@ -117,7 +117,7 @@ export default function KeuanganPage() {
               ))}
             </select>
             <select 
-              className="text-xs font-bold border-none focus:ring-0 outline-none bg-transparent text-foreground flex-1"
+              className="text-sm sm:text-sm font-semibold border-none focus:ring-0 outline-none bg-transparent text-foreground flex-none cursor-pointer py-2"
               value={selectedYear}
               onChange={(e) => setSelectedYear(parseInt(e.target.value))}
             >
@@ -128,13 +128,13 @@ export default function KeuanganPage() {
           </div>
 
           <div className="flex gap-2 w-full sm:w-auto">
-            <Button variant="outline" size="sm" className="h-10 px-4 flex-1 sm:flex-none" onClick={() => openDialog("expense")}>
-              <Plus size={16} className="mr-2" />
-              Pengeluaran
+            <Button variant="outline" size="sm" className="h-10 px-4 flex-1 text-[10px] sm:text-xs font-semibold shadow-sm" onClick={() => openDialog("expense")}>
+              <Plus size={14} className="mr-2 text-rose-500" />
+              Keluar
             </Button>
-            <Button size="sm" className="h-10 px-4 shadow-sm flex-1 sm:flex-none" onClick={() => openDialog("income")}>
-              <Plus size={16} className="mr-2" />
-              Pemasukan
+            <Button size="sm" className="h-10 px-4 flex-1 text-[10px] sm:text-xs font-semibold shadow-sm" onClick={() => openDialog("income")}>
+              <Plus size={14} className="mr-2 text-emerald-400" />
+              Masuk
             </Button>
           </div>
         </div>
@@ -187,88 +187,82 @@ export default function KeuanganPage() {
         </DialogContent>
       </Dialog>
 
-      <div className="grid gap-4 grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-3">
         <Card className="shadow-sm border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Total Pemasukan</CardTitle>
-            <TrendingUp className="h-4 w-4 text-emerald-500" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
+            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Pemasukan</CardTitle>
+            <TrendingUp size={14} className="text-emerald-500" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold tracking-tight text-emerald-600">Rp {totalIncome.toLocaleString()}</div>
-            <p className="text-[10px] text-muted-foreground font-medium mt-1 uppercase tracking-tight">{months[selectedMonth]}</p>
+          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
+            <div className="text-base sm:text-2xl font-bold tracking-tight text-emerald-600">Rp {totalIncome.toLocaleString()}</div>
+            <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5">{months[selectedMonth]}</p>
           </CardContent>
         </Card>
         <Card className="shadow-sm border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Total Pengeluaran</CardTitle>
-            <TrendingDown className="h-4 w-4 text-destructive" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
+            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Pengeluaran</CardTitle>
+            <TrendingDown size={14} className="text-rose-500" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold tracking-tight text-destructive">Rp {totalExpense.toLocaleString()}</div>
-            <p className="text-[10px] text-muted-foreground font-medium mt-1 uppercase tracking-tight">{months[selectedMonth]}</p>
+          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
+            <div className="text-base sm:text-2xl font-bold tracking-tight text-rose-600">Rp {totalExpense.toLocaleString()}</div>
+            <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5">{months[selectedMonth]}</p>
           </CardContent>
         </Card>
         <Card className="shadow-sm border-border bg-foreground text-background col-span-2 lg:col-span-1">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-[10px] font-bold uppercase tracking-wider opacity-70">Saldo Bersih</CardTitle>
-            <Wallet className="h-4 w-4 opacity-70" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
+            <CardTitle className="text-[10px] sm:text-xs font-semibold opacity-70">Saldo Bersih</CardTitle>
+            <Wallet size={14} className="opacity-70" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold tracking-tight">Rp {(totalIncome - totalExpense).toLocaleString()}</div>
-            <p className="text-[10px] opacity-50 font-medium mt-1 uppercase tracking-tight italic">Net Cash Flow</p>
+          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
+            <div className="text-lg sm:text-2xl font-bold tracking-tight">Rp {(totalIncome - totalExpense).toLocaleString()}</div>
+            <p className="text-[9px] sm:text-[10px] opacity-50 font-medium mt-0.5">Net Flow</p>
           </CardContent>
         </Card>
       </div>
 
       <Tabs defaultValue="all" onValueChange={setActiveTab} className="w-full space-y-6">
-        <TabsList className="bg-secondary/30 p-1 border border-border/50 h-10 w-full sm:w-auto">
-          <TabsTrigger value="all" className="flex-1 sm:flex-none px-6">Semua</TabsTrigger>
-          <TabsTrigger value="income" className="flex-1 sm:flex-none px-6">Pemasukan</TabsTrigger>
-          <TabsTrigger value="expense" className="flex-1 sm:flex-none px-6">Pengeluaran</TabsTrigger>
+        <TabsList className="bg-secondary/30 p-1 border border-border/50 h-11 w-full max-w-[400px]">
+          <TabsTrigger value="all" className="flex-1 rounded-md text-[10px] sm:text-xs font-semibold px-4">Semua</TabsTrigger>
+          <TabsTrigger value="income" className="flex-1 rounded-md text-[10px] sm:text-xs font-semibold px-4">Masuk</TabsTrigger>
+          <TabsTrigger value="expense" className="flex-1 rounded-md text-[10px] sm:text-xs font-semibold px-4">Keluar</TabsTrigger>
         </TabsList>
         <TabsContent value={activeTab} className="mt-0">
-          <Card className="shadow-sm border-border overflow-hidden">
+          <Card className="shadow-sm border-border overflow-hidden rounded-xl">
             <CardContent className="p-0">
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader className="bg-muted/50">
                     <TableRow className="hover:bg-transparent">
-                      <TableHead className="py-4 px-6 font-bold text-foreground uppercase tracking-widest text-[10px] whitespace-nowrap">Tanggal</TableHead>
-                      <TableHead className="py-4 font-bold text-foreground uppercase tracking-widest text-[10px] whitespace-nowrap">Kategori</TableHead>
-                      <TableHead className="py-4 font-bold text-foreground uppercase tracking-widest text-[10px] whitespace-nowrap">Deskripsi</TableHead>
-                      <TableHead className="py-4 font-bold text-foreground uppercase tracking-widest text-[10px] whitespace-nowrap">Jumlah</TableHead>
-                      <TableHead className="py-4 text-right px-6 font-bold text-foreground uppercase tracking-widest text-[10px] whitespace-nowrap">Status</TableHead>
+                      <TableHead className="py-4 px-6 font-semibold text-foreground whitespace-nowrap text-[10px]">Tanggal</TableHead>
+                      <TableHead className="py-4 font-semibold text-foreground whitespace-nowrap text-[10px]">Kategori</TableHead>
+                      <TableHead className="py-4 font-semibold text-foreground whitespace-nowrap text-[10px]">Deskripsi</TableHead>
+                      <TableHead className="py-4 font-semibold text-foreground whitespace-nowrap text-[10px]">Jumlah</TableHead>
+                      <TableHead className="py-4 text-right px-6 font-semibold text-foreground whitespace-nowrap text-[10px]">Status</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {displayTransactions.map((t) => (
                       <TableRow key={t.id} className="group hover:bg-muted/50 transition-colors border-border">
-                        <TableCell className="py-4 px-6 font-medium text-muted-foreground text-sm whitespace-nowrap">{t.date}</TableCell>
-                        <TableCell className="py-4 whitespace-nowrap">
-                          <div className="flex items-center gap-2">
-                            <span className="font-semibold text-foreground text-sm">{t.category}</span>
-                          </div>
+                        <TableCell className="py-5 px-6 font-medium text-muted-foreground text-[10px] sm:text-xs whitespace-nowrap">{t.date}</TableCell>
+                        <TableCell className="py-5 whitespace-nowrap">
+                          <Badge variant="outline" className="text-[9px] font-semibold px-2 py-0.5 bg-muted/30 border-border">{t.category}</Badge>
                         </TableCell>
-                        <TableCell className="py-4 text-muted-foreground text-sm italic truncate max-w-[200px] whitespace-nowrap">"{t.description}"</TableCell>
-                        <TableCell className="py-4 whitespace-nowrap">
+                        <TableCell className="py-5 text-foreground font-semibold italic text-[10px] sm:text-xs truncate max-w-[150px] whitespace-nowrap">"{t.description || "-"}"</TableCell>
+                        <TableCell className="py-5 whitespace-nowrap">
                           <span className={cn(
-                            "font-bold tracking-tight text-sm",
-                            t.type === 'income' ? 'text-emerald-600' : 'text-destructive'
+                            "font-bold text-xs sm:text-sm",
+                            t.type === 'income' ? 'text-emerald-600' : 'text-rose-600'
                           )}>
                             {t.type === 'income' ? '+' : '-'} Rp {t.amount.toLocaleString()}
                           </span>
                         </TableCell>
-                        <TableCell className="py-4 text-right px-6 whitespace-nowrap">
-                          <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-bold text-[10px] uppercase shadow-none">Success</Badge>
+                        <TableCell className="py-5 text-right px-6 whitespace-nowrap">
+                          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 ml-auto" />
                         </TableCell>
                       </TableRow>
                     ))}
                     {displayTransactions.length === 0 && (
-                      <TableRow>
-                        <TableCell colSpan={5} className="text-center py-10 text-muted-foreground italic">
-                          Belum ada data transaksi di bulan ini.
-                        </TableCell>
-                      </TableRow>
+                      <TableRow><TableCell colSpan={5} className="text-center py-12 text-muted-foreground italic text-sm">Belum ada data transaksi.</TableCell></TableRow>
                     )}
                   </TableBody>
                 </Table>

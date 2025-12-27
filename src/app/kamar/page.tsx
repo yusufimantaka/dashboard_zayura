@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { DoorClosed, Plus, MoreVertical, Filter } from "lucide-react";
+import { DoorClosed, Plus, MoreVertical, Filter, Trash2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -31,15 +31,16 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { useData } from "@/context/DataContext";
+import { cn } from "@/lib/utils";
 
 export default function KamarPage() {
-  const { rooms, addRoom, residents, tenancies, updateRoomStatus } = useData();
+  const { rooms, addRoom, residents, tenancies } = useData();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [filterFloor, setFilterFloor] = useState<string>("all");
   
   const [newRoom, setNewRoom] = useState({ 
     room_number: "", 
-    price_per_month: 0, 
+    price_per_month: 2100000, 
     floor: 1, 
     type: 'Medium' as 'Small' | 'Medium' | 'Large' 
   });
@@ -84,21 +85,21 @@ export default function KamarPage() {
   };
 
   return (
-    <div className="space-y-8">
-      <div className="flex justify-between items-center">
+    <div className="space-y-6 pb-10">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="space-y-1">
-          <h2 className="text-3xl font-bold tracking-tight text-foreground">Inventory Kamar</h2>
-          <p className="text-sm text-muted-foreground">Manajemen unit dan aset hunian.</p>
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">Inventory Kamar</h2>
+          <p className="text-xs sm:text-sm text-muted-foreground">Manajemen unit dan aset hunian.</p>
         </div>
         
-        <div className="flex gap-3">
+        <div className="flex w-full sm:w-auto gap-2">
           <Select value={filterFloor} onValueChange={setFilterFloor}>
-            <SelectTrigger className="w-[180px] h-10 bg-secondary/50 rounded-md border-border text-xs font-bold">
-              <Filter size={16} className="mr-2 text-muted-foreground" />
-              <SelectValue placeholder="Filter Lantai" />
+            <SelectTrigger className="flex-1 sm:w-[160px] h-10 bg-secondary/50 rounded-md border-border text-[10px] sm:text-xs font-semibold">
+              <Filter size={14} className="mr-2 text-muted-foreground" />
+              <SelectValue placeholder="Lantai" />
             </SelectTrigger>
             <SelectContent className="rounded-md border-border">
-              <SelectItem value="all">Seluruh Lantai</SelectItem>
+              <SelectItem value="all">Semua Lantai</SelectItem>
               <SelectItem value="1">Lantai 01</SelectItem>
               <SelectItem value="2">Lantai 02</SelectItem>
               <SelectItem value="3">Lantai 03</SelectItem>
@@ -107,9 +108,9 @@ export default function KamarPage() {
 
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button size="sm" className="h-10 px-4">
-                <Plus size={18} className="mr-2" />
-                Tambah Kamar
+              <Button size="sm" className="flex-none sm:flex-1 h-10 px-4 text-[10px] sm:text-xs font-semibold">
+                <Plus size={16} className="mr-2" />
+                Tambah
               </Button>
             </DialogTrigger>
             <DialogContent>
@@ -174,89 +175,86 @@ export default function KamarPage() {
         </div>
       </div>
 
-      <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
         <Card className="shadow-sm border-border bg-foreground text-background">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-[10px] font-bold uppercase tracking-wider opacity-70">Unit Inventory</CardTitle>
-            <DoorClosed className="h-4 w-4 opacity-70" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
+            <CardTitle className="text-[10px] sm:text-xs font-semibold opacity-70">Inventory</CardTitle>
+            <DoorClosed className="h-3.5 w-3.5 sm:h-4 sm:w-4 opacity-70" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold tracking-tight">{rooms.length}</div>
-            <p className="text-[10px] opacity-50 font-medium mt-1 uppercase">Total Capacity</p>
+          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
+            <div className="text-lg sm:text-2xl font-bold tracking-tight">{rooms.length}</div>
+            <p className="text-[9px] sm:text-[10px] opacity-50 font-medium mt-0.5">Unit Total</p>
           </CardContent>
         </Card>
         <Card className="shadow-sm border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Terisi</CardTitle>
-            <div className="h-2 w-2 rounded-full bg-destructive" />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
+            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Terisi</CardTitle>
+            <div className="h-2 w-2 rounded-full bg-rose-500" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold tracking-tight">
+          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
+            <div className="text-lg sm:text-2xl font-bold tracking-tight">
               {rooms.filter(r => r.status === 'occupied').length}
             </div>
-            <p className="text-[10px] text-muted-foreground font-medium mt-1 uppercase">Occupied</p>
+            <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5">Occupied</p>
           </CardContent>
         </Card>
         <Card className="shadow-sm border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Tersedia</CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
+            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Ready</CardTitle>
             <div className="h-2 w-2 rounded-full bg-emerald-500" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold tracking-tight">
+          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
+            <div className="text-lg sm:text-2xl font-bold tracking-tight">
               {rooms.filter(r => r.status === 'available').length}
             </div>
-            <p className="text-[10px] text-muted-foreground font-medium mt-1 uppercase">Ready</p>
+            <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5">Available</p>
           </CardContent>
         </Card>
         <Card className="shadow-sm border-border">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Maintenance</CardTitle>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1.5 px-4 pt-4 sm:px-6">
+            <CardTitle className="text-[10px] sm:text-xs font-semibold text-muted-foreground">Repair</CardTitle>
             <div className="h-2 w-2 rounded-full bg-amber-500" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold tracking-tight">
+          <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
+            <div className="text-lg sm:text-2xl font-bold tracking-tight">
               {rooms.filter(r => r.status === 'maintenance').length}
             </div>
-            <p className="text-[10px] text-muted-foreground font-medium mt-1 uppercase">Repair</p>
+            <p className="text-[9px] sm:text-[10px] text-muted-foreground font-medium mt-0.5">Maintenance</p>
           </CardContent>
         </Card>
       </div>
 
-      <Card className="border-border shadow-sm bg-card overflow-hidden rounded-lg">
+      <Card className="border-border shadow-sm bg-card overflow-hidden rounded-xl">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <Table>
               <TableHeader className="bg-muted/50">
                 <TableRow className="hover:bg-transparent">
-                  <TableHead className="py-4 px-6 font-bold text-foreground uppercase tracking-widest text-[10px] whitespace-nowrap">No. Kamar</TableHead>
-                  <TableHead className="py-4 font-bold text-foreground uppercase tracking-widest text-[10px] whitespace-nowrap">Lantai</TableHead>
-                  <TableHead className="py-4 font-bold text-foreground uppercase tracking-widest text-[10px] whitespace-nowrap">Tipe</TableHead>
-                  <TableHead className="py-4 font-bold text-foreground uppercase tracking-widest text-[10px] whitespace-nowrap">Status</TableHead>
-                  <TableHead className="py-4 font-bold text-foreground uppercase tracking-widest text-[10px] whitespace-nowrap">Harga</TableHead>
-                  <TableHead className="py-4 font-bold text-foreground uppercase tracking-widest text-[10px] whitespace-nowrap">Penghuni</TableHead>
-                  <TableHead className="py-4 text-right px-6 font-bold text-foreground uppercase tracking-widest text-[10px] whitespace-nowrap">Aksi</TableHead>
+                  <TableHead className="py-4 px-6 font-semibold text-foreground whitespace-nowrap">No. Kamar</TableHead>
+                  <TableHead className="py-4 font-semibold text-foreground whitespace-nowrap text-center">Lantai</TableHead>
+                  <TableHead className="py-4 font-semibold text-foreground whitespace-nowrap text-center">Tipe</TableHead>
+                  <TableHead className="py-4 font-semibold text-foreground whitespace-nowrap text-center">Status</TableHead>
+                  <TableHead className="py-4 font-semibold text-foreground whitespace-nowrap">Harga</TableHead>
+                  <TableHead className="py-4 text-right px-6 font-semibold text-foreground whitespace-nowrap">Aksi</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredRooms.map((room) => (
                   <TableRow key={room.id} className="group hover:bg-muted/50 transition-colors border-border">
-                    <TableCell className="py-4 px-6 font-bold text-foreground text-lg whitespace-nowrap">{room.room_number}</TableCell>
-                    <TableCell className="py-4 font-semibold text-muted-foreground uppercase text-xs tracking-tight whitespace-nowrap">Lantai {room.floor}</TableCell>
-                    <TableCell className="py-4 whitespace-nowrap">
-                      <Badge variant="outline" className="font-semibold px-3 py-1 bg-muted/50">{room.type}</Badge>
+                    <TableCell className="py-5 px-6 font-bold text-foreground text-base sm:text-lg whitespace-nowrap">{room.room_number}</TableCell>
+                    <TableCell className="py-5 text-center whitespace-nowrap">
+                      <span className="text-[10px] sm:text-xs font-semibold text-muted-foreground bg-secondary px-2 py-1 rounded-full">L{room.floor}</span>
                     </TableCell>
-                    <TableCell className="py-4 whitespace-nowrap">
-                      <Badge variant={getStatusColor(room.status)} className="font-semibold shadow-none border-none">
-                        {room.status === 'occupied' ? 'Terisi' : 
-                         room.status === 'available' ? 'Tersedia' : 'Perbaikan'}
-                      </Badge>
+                    <TableCell className="py-5 text-center whitespace-nowrap">
+                      <Badge variant="outline" className="text-[9px] font-semibold px-2 py-0.5 bg-muted/50 border-border">{room.type}</Badge>
                     </TableCell>
-                    <TableCell className="py-4 font-bold text-foreground tracking-tight whitespace-nowrap">Rp {room.price_per_month.toLocaleString()}</TableCell>
-                    <TableCell className="py-4 font-medium text-muted-foreground italic text-sm whitespace-nowrap">{getResidentName(room.id)}</TableCell>
-                    <TableCell className="py-4 text-right px-6 whitespace-nowrap">
-                      <Button variant="ghost" size="icon" className="hover:bg-muted rounded-full">
-                        <MoreVertical size={18} />
+                    <TableCell className="py-5 text-center whitespace-nowrap">
+                      <div className={`mx-auto w-2 h-2 rounded-full ${room.status === 'available' ? 'bg-emerald-500' : room.status === 'occupied' ? 'bg-rose-500' : 'bg-amber-500'}`} />
+                    </TableCell>
+                    <TableCell className="py-5 font-bold text-foreground tracking-tight text-xs sm:text-sm whitespace-nowrap">Rp {room.price_per_month.toLocaleString()}</TableCell>
+                    <TableCell className="py-5 text-right px-6 whitespace-nowrap">
+                      <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-muted rounded-full">
+                        <MoreVertical size={14} className="text-muted-foreground" />
                       </Button>
                     </TableCell>
                   </TableRow>
