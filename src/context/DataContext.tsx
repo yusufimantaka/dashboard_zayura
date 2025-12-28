@@ -56,6 +56,16 @@ export interface Transaction {
   payment_method?: 'Transfer' | 'Cash';
   proof_image?: string;
   invoice_id?: string;
+  payroll_id?: string;
+}
+
+export interface Payroll {
+  id: string;
+  employee_id: string;
+  month_year: string;
+  amount: number;
+  status: 'unpaid' | 'paid';
+  due_date: string;
 }
 
 export interface Laundry {
@@ -83,6 +93,7 @@ interface DataContextType {
   transactions: Transaction[];
   laundry: Laundry[];
   employees: Employee[];
+  payroll: Payroll[];
   user: any | null;
   loading: boolean;
   language: Language;
@@ -94,12 +105,14 @@ interface DataContextType {
   addResident: (resident: Omit<Resident, 'id'>) => Promise<string>;
   addTenancy: (tenancy: Omit<Tenancy, 'id'>) => Promise<string>;
   addInvoice: (invoice: Omit<Invoice, 'id'>) => Promise<void>;
+  addPayroll: (payroll: Omit<Payroll, 'id'>) => Promise<void>;
   addTransaction: (transaction: Omit<Transaction, 'id'>) => Promise<void>;
   addLaundry: (laundry: Omit<Laundry, 'id'>) => Promise<void>;
   addEmployee: (employee: Omit<Employee, 'id'>) => Promise<void>;
   updateRoomStatus: (id: string, status: Room['status']) => Promise<void>;
   updateLaundryStatus: (id: string, status: Laundry['status']) => Promise<void>;
   payInvoice: (invoiceId: string, transaction: Omit<Transaction, 'id' | 'invoice_id'>) => Promise<void>;
+  payPayroll: (payrollId: string, transaction: Omit<Transaction, 'id' | 'payroll_id'>) => Promise<void>;
   checkoutResident: (tenancyId: string) => Promise<void>;
   deleteTenancy: (tenancyId: string) => Promise<void>;
   extendTenancy: (tenancyId: string, newEndDate: string) => Promise<void>;
@@ -118,6 +131,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [laundry, setLaundry] = useState<Laundry[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
+  const [payroll, setPayroll] = useState<Payroll[]>([]);
   const [user, setUser] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [language, setLanguageState] = useState<Language>('id');
@@ -175,7 +189,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
         { data: invoicesData },
         { data: transactionsData },
         { data: laundryData },
-        { data: employeesData }
+        { data: employeesData },
+        { data: payrollData }
       ] = await Promise.all([
         supabase.from('rooms').select('*').order('room_number'),
         supabase.from('residents').select('*').order('full_name'),
@@ -183,7 +198,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
         supabase.from('invoices').select('*').order('due_date'),
         supabase.from('transactions').select('*').order('created_at', { ascending: false }),
         supabase.from('laundry').select('*').order('date', { ascending: false }),
-        supabase.from('employees').select('*').order('name')
+        supabase.from('employees').select('*').order('name'),
+        supabase.from('payroll').select('*').order('due_date')
       ]);
 
       if (roomsData && tenanciesData) {
@@ -208,6 +224,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
         }
         setLaundry(laundryData || []);
         setEmployees(employeesData || []);
+        setPayroll(payrollData || []);
       }
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -246,6 +263,12 @@ export function DataProvider({ children }: { children: ReactNode }) {
     setInvoices(prev => [...prev, data]);
   };
 
+  const addPayroll = async (payrollItem: Omit<Payroll, 'id'>) => {
+    const { data, error } = await supabase.from('payroll').insert([payrollItem]).select().single();
+    if (error) throw error;
+    setPayroll(prev => [...prev, data]);
+  };
+
   const addTransaction = async (transaction: Omit<Transaction, 'id'>) => {
     const dbTransaction = {
       ...transaction,
@@ -276,6 +299,25 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
     setTransactions(prev => [{ ...transData, date: transData.transaction_date }, ...prev]);
     setInvoices(prev => prev.map(inv => inv.id === invoiceId ? { ...inv, status: 'paid' } : inv));
+  };
+
+  const payPayroll = async (payrollId: string, transaction: Omit<Transaction, 'id' | 'payroll_id'>) => {
+    const dbTransaction = {
+      ...transaction,
+      payroll_id: payrollId,
+      transaction_date: transaction.date
+    };
+    // @ts-ignore
+    delete dbTransaction.date;
+
+    const { data: transData, error: transError } = await supabase.from('transactions').insert([dbTransaction]).select().single();
+    if (transError) throw transError;
+
+    const { error: payError } = await supabase.from('payroll').update({ status: 'paid' }).eq('id', payrollId);
+    if (payError) throw payError;
+
+    setTransactions(prev => [{ ...transData, date: transData.transaction_date }, ...prev]);
+    setPayroll(prev => prev.map(p => p.id === payrollId ? { ...p, status: 'paid' } : p));
   };
 
   const updateRoomStatus = async (id: string, status: Room['status']) => {
@@ -350,10 +392,10 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
   return (
     <DataContext.Provider value={{ 
-      rooms, residents, tenancies, invoices, transactions, laundry, employees, user, loading,
+      rooms, residents, tenancies, invoices, transactions, laundry, employees, payroll, user, loading,
       language, themeColor, t, setLanguage, setThemeColor,
-      addRoom, addResident, addTenancy, addInvoice, addTransaction, addLaundry, addEmployee,
-      updateRoomStatus, updateLaundryStatus, payInvoice, checkoutResident, deleteTenancy, extendTenancy,
+      addRoom, addResident, addTenancy, addInvoice, addPayroll, addTransaction, addLaundry, addEmployee,
+      updateRoomStatus, updateLaundryStatus, payInvoice, payPayroll, checkoutResident, deleteTenancy, extendTenancy,
       login, logout, refreshData: fetchData
     }}>
       {children}

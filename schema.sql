@@ -52,6 +52,17 @@ CREATE TABLE invoices (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Payroll Table
+CREATE TABLE payroll (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  employee_id UUID REFERENCES employees(id) ON DELETE CASCADE,
+  month_year TEXT NOT NULL, -- e.g., "Januari 2025"
+  amount DECIMAL NOT NULL,
+  status TEXT DEFAULT 'unpaid', -- unpaid, paid
+  due_date DATE NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- Transactions (Income/Expenses)
 CREATE TABLE transactions (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -63,6 +74,7 @@ CREATE TABLE transactions (
   payment_method TEXT, -- Cash, Transfer
   proof_image TEXT, -- Base64 or URL
   invoice_id UUID REFERENCES invoices(id) ON DELETE SET NULL,
+  payroll_id UUID REFERENCES payroll(id) ON DELETE SET NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
